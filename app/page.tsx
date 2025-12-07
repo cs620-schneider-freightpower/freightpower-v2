@@ -5,6 +5,7 @@ import { Search, Loader2 } from 'lucide-react';
 import OptimizedLoadCard from './components/OptimizedLoadCard';
 import LoadDetailsModal from './components/LoadDetailsModal';
 import BottomNav from './components/search-results/BottomNav';
+import RecommendedLoadsRow from './components/RecommendedLoadsRow';
 import { mockLoads } from './data/mockLoads';
 import { Load } from './types/load';
 import { useNatNal } from './context/NatNalContext';
@@ -210,6 +211,9 @@ export default function Optimized() {
             </div>
           </div>
         )}
+
+        {/* Backend Recommended Loads Section */}
+        <RecommendedLoadsRow onLoadClick={handleLoadClick} />
 
         {/* Loads for you Banner */}
         <div className="mb-4">
