@@ -1,6 +1,12 @@
 "use client"
 import { Load } from '../types/load';
 import { X, MapPin, Calendar, Clock, Weight, TrendingUp, Navigation } from 'lucide-react';
+import dynamic from 'next/dynamic';
+
+const Map = dynamic(() => import('./Map'), {
+  loading: () => <div className="w-full h-[300px] bg-gray-100 rounded-xl animate-pulse" />,
+  ssr: false
+});
 
 interface LoadDetailsModalProps {
   load: Load | null;
@@ -27,7 +33,7 @@ export default function LoadDetailsModal({ load, isOpen, onClose, onBook }: Load
   };
 
   return (
-    <div 
+    <div
       className="fixed inset-0 bg-black/50 z-50 flex items-end sm:items-center justify-center"
       onClick={handleBackdropClick}
     >
@@ -35,7 +41,7 @@ export default function LoadDetailsModal({ load, isOpen, onClose, onBook }: Load
         {/* Header */}
         <div className="sticky top-0 bg-white border-b border-gray-200 px-6 py-4 flex items-center justify-between">
           <h2 className="text-xl font-bold text-black">Load Details</h2>
-          <button 
+          <button
             onClick={onClose}
             className="p-2 hover:bg-gray-100 rounded-full transition-colors"
           >
@@ -71,7 +77,9 @@ export default function LoadDetailsModal({ load, isOpen, onClose, onBook }: Load
           {/* Route Information */}
           <div className="space-y-4">
             <h3 className="text-lg font-bold text-black">Route Information</h3>
-            
+
+            <Map pickup={load.pickup} delivery={load.delivery} />
+
             {/* Pickup */}
             <div className="bg-gray-50 rounded-lg p-4">
               <div className="flex items-start gap-3 mb-3">

@@ -14,6 +14,8 @@ export interface Load {
     liveLoad?: boolean;
     emptyMiles: number;
     address?: string;
+    latitude?: number;
+    longitude?: number;
   };
   delivery: {
     city: string;
@@ -23,6 +25,8 @@ export interface Load {
     instructions: string[];
     emptyMiles: number;
     address?: string;
+    latitude?: number;
+    longitude?: number;
   };
   isReload?: boolean;
 }
