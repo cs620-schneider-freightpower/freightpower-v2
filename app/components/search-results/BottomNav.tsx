@@ -10,17 +10,17 @@ export default function BottomNav() {
   // Determine if we're in demo or optimized context
   const isDemo = pathname.startsWith('/demo');
   const isOptimized = pathname.startsWith('/optimized');
-  
+
   // Determine base path
   const basePath = isDemo ? '/demo' : isOptimized ? '/optimized' : '';
-  
+
   // Determine which page is active
   const isHomePage = pathname.includes('/home');
-  const isSearchPage = !isHomePage && (isDemo || isOptimized);
+  const isSearchPage = !isHomePage && (isDemo || isOptimized || pathname === '/');
 
   const navItems = [
-    { icon: Home, label: 'Home', path: `${basePath}/home`, active: isHomePage },
-    { icon: Search, label: 'Search', path: basePath, active: isSearchPage },
+    { icon: Home, label: 'Home', path: `${basePath}/home`, active: pathname.includes('/home') },
+    { icon: Search, label: 'Search', path: basePath || '/', active: isSearchPage },
     { icon: FileText, label: 'My Loads', path: null, active: false },
     { icon: Settings, label: 'Manage', path: null, active: false },
     { icon: MoreHorizontal, label: 'More', path: null, active: false },
@@ -41,15 +41,13 @@ export default function BottomNav() {
               }}
               className="flex flex-col items-center justify-center flex-1 py-1 cursor-pointer hover:bg-gray-50 rounded transition-colors"
             >
-              <Icon 
-                className={`w-6 h-6 mb-1 ${
-                  item.active ? 'text-orange-600' : 'text-gray-600'
-                }`}
+              <Icon
+                className={`w-6 h-6 mb-1 ${item.active ? 'text-orange-600' : 'text-gray-600'
+                  }`}
               />
-              <span 
-                className={`text-xs ${
-                  item.active ? 'text-orange-600 font-medium' : 'text-gray-600'
-                }`}
+              <span
+                className={`text-xs ${item.active ? 'text-orange-600 font-medium' : 'text-gray-600'
+                  }`}
               >
                 {item.label}
               </span>
