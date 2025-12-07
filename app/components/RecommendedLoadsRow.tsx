@@ -33,6 +33,15 @@ export default function RecommendedLoadsRow({ onLoadClick }: RecommendedLoadsRow
                         id: rec.id || rec.load_id,
                         loadedRPM: rec.loadedRPM || rec.revenue_per_mile || 0,
                         estTotalRPM: rec.estTotalRPM || rec.revenue_per_mile || 0,
+                        pickup: {
+                            ...rec.pickup,
+                            emptyMiles: rec.pickup?.emptyMiles || 0,
+                        },
+                        delivery: {
+                            ...rec.delivery,
+                            emptyMiles: rec.delivery?.emptyMiles || 0,
+                            instructions: rec.delivery?.instructions || [],
+                        },
                     }));
                     setLoads(mappedLoads);
                 } else {
