@@ -464,7 +464,7 @@ export default function Optimized() {
 
         {/* Loads near you Section */}
         <div className="mb-6">
-          <div className="flex items-center justify-between px-4 mb-3">
+          {/* <div className="flex items-center justify-between px-4 mb-3">
             <h3 className="text-xl font-bold text-black">Loads near you</h3>
             <button
               onClick={() => router.push('/all-loads')}
@@ -472,7 +472,7 @@ export default function Optimized() {
             >
               See all
             </button>
-          </div>
+          </div> */}
 
           {/* Horizontal Scroll Container */}
           <div className="overflow-x-auto scrollbar-hide">

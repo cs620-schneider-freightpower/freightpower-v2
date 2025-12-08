@@ -158,13 +158,20 @@ export default function NatNalPage() {
                                         <label className="block text-xs font-semibold text-gray-500 uppercase mb-1.5 ml-1">
                                             Date
                                         </label>
-                                        <input
-                                            type="date"
-                                            value={formDate}
-                                            onChange={(e) => setFormDate(e.target.value)}
-                                            className="w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#ff6b35] focus:border-transparent text-gray-900 font-medium"
-                                            required
-                                        />
+                                        <div className="relative w-full bg-gray-50 border border-gray-200 rounded-lg min-h-[46px] group focus-within:ring-2 focus-within:ring-[#ff6b35] focus-within:border-transparent">
+                                            <input
+                                                type="date"
+                                                value={formDate}
+                                                onChange={(e) => setFormDate(e.target.value)}
+                                                className={`w-full h-full absolute inset-0 px-4 py-2.5 bg-transparent border-none outline-none focus:ring-0 text-gray-900 font-medium z-10 ${!formDate ? 'text-transparent' : ''}`}
+                                                required
+                                            />
+                                            {!formDate && (
+                                                <span className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500 text-sm pointer-events-none z-0">
+                                                    mm/dd/yyyy
+                                                </span>
+                                            )}
+                                        </div>
                                         <div className="flex gap-2 mt-3">
                                             <button
                                                 type="button"
@@ -186,13 +193,20 @@ export default function NatNalPage() {
                                         <label className="block text-xs font-semibold text-gray-500 uppercase mb-1.5 ml-1">
                                             Time
                                         </label>
-                                        <input
-                                            type="time"
-                                            value={formTime}
-                                            onChange={(e) => setFormTime(e.target.value)}
-                                            className="w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#ff6b35] focus:border-transparent text-gray-900 font-medium"
-                                            required
-                                        />
+                                        <div className="relative w-full bg-gray-50 border border-gray-200 rounded-lg min-h-[46px] group focus-within:ring-2 focus-within:ring-[#ff6b35] focus-within:border-transparent">
+                                            <input
+                                                type="time"
+                                                value={formTime}
+                                                onChange={(e) => setFormTime(e.target.value)}
+                                                className={`w-full h-full absolute inset-0 px-4 py-2.5 bg-transparent border-none outline-none focus:ring-0 text-gray-900 font-medium z-10 ${!formTime ? 'text-transparent' : ''}`}
+                                                required
+                                            />
+                                            {!formTime && (
+                                                <span className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500 text-sm pointer-events-none z-0">
+                                                    --:-- --
+                                                </span>
+                                            )}
+                                        </div>
                                         <div className="grid grid-cols-4 gap-2 mt-3">
                                             {[0, 6, 12, 18].map(hour => (
                                                 <button
