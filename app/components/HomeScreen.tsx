@@ -5,6 +5,7 @@ import BottomNav from './search-results/BottomNav';
 import { useNatNal } from '../context/NatNalContext';
 import { useWatchedLoads } from '../context/WatchedLoadsContext';
 import { Load } from '../types/load';
+import LoadDetailsModal from './LoadDetailsModal';
 import RecommendedLoadsRow from './RecommendedLoadsRow';
 import OptimizedLoadCard from './OptimizedLoadCard';
 
@@ -68,6 +69,25 @@ export default function HomeScreen() {
   const [liveNews, setLiveNews] = useState<NewsArticle[]>([]);
   const [isLoadingNews, setIsLoadingNews] = useState(false);
   const [newsError, setNewsError] = useState<string | null>(null);
+
+  // Modal state
+  const [selectedLoad, setSelectedLoad] = useState<Load | null>(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const handleLoadClick = (load: Load) => {
+    setSelectedLoad(load);
+    setIsModalOpen(true);
+  };
+
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
+    setSelectedLoad(null);
+  };
+
+  const handleBookLoad = (loadId: string) => {
+    // Navigate to the booking page
+    window.location.href = `/book/${loadId}`;
+  };
 
   // Form state
   const [formDate, setFormDate] = useState('');
@@ -166,7 +186,7 @@ export default function HomeScreen() {
 
       {/* Recommended Loads */}
       <RecommendedLoadsRow
-        onLoadClick={(load) => console.log('Load clicked:', load)}
+        onLoadClick={handleLoadClick}
         watchedLoadIds={new Set(watchedLoads.map(l => l.id))}
         onToggleWatch={toggleWatch}
       />
@@ -487,7 +507,7 @@ export default function HomeScreen() {
                     load={load}
                     isWatched={true}
                     onToggleWatch={() => toggleWatch(load)}
-                    onClick={() => console.log('Load clicked:', load)}
+                    onClick={() => handleLoadClick(load)}
                   />
                 ))}
               </div>
@@ -498,6 +518,14 @@ export default function HomeScreen() {
 
       {/* Bottom Navigation */}
       <BottomNav />
+
+      {/* Load Details Modal */}
+      <LoadDetailsModal
+        load={selectedLoad}
+        isOpen={isModalOpen}
+        onClose={handleCloseModal}
+        onBook={handleBookLoad}
+      />
     </div>
   );
 }
