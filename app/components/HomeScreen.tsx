@@ -184,13 +184,6 @@ export default function HomeScreen() {
         </button>
       </div>
 
-      {/* Recommended Loads */}
-      <RecommendedLoadsRow
-        onLoadClick={handleLoadClick}
-        watchedLoadIds={new Set(watchedLoads.map(l => l.id))}
-        onToggleWatch={toggleWatch}
-      />
-
       {/* Tabs */}
       <div className="bg-white border-b flex">
         {['News', 'NAT / NAL', 'Watched'].map((tab) => (
