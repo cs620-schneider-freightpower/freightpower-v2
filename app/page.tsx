@@ -40,7 +40,7 @@ export default function Optimized() {
   const [isFiltering, setIsFiltering] = useState(false);
 
   // Split loads into different sections
-  const loadsNearYou = mockLoads.slice(2, 6); // Oakland, SF, Modesto, Fresno
+  const loadsNearYou = mockLoads.slice(2, 22); // Oakland, SF, Modesto, Fresno
   const californiaToTexas = mockLoads.filter(load =>
     load.pickup.state === 'CA' && load.delivery.state === 'TX'
   ).slice(0, 4);
@@ -455,8 +455,8 @@ export default function Optimized() {
         <div className="mb-4">
           <div className="relative overflow-hidden w-full bg-orange-300/90 px-4 py-2">
             <div className="relative z-10">
-              <h2 className="text-2xl text-white font-bold mb-0">Loads for you</h2>
-              <p className="text-base text-white ">Based on your recent activities</p>
+              <h2 className="text-2xl text-white font-bold mb-0">Loads near Kansas City, MO</h2>
+              <p className="text-base text-white ">Based on your current location</p>
             </div>
           </div>
         </div>

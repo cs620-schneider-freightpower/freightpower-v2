@@ -23,7 +23,7 @@ export default function RecommendedLoadsRow({ onLoadClick, watchedLoadIds, onTog
             try {
                 // Using hardcoded coordinates for Kansas City to ensure we get data for now
                 // In a real app, this would come from the user's location or profile
-                const response = await fetch(`http://localhost:8000/recommend/${userId}?current_lat=39.0997&current_lon=-94.5786`);
+                const response = await fetch(`http://localhost:8000/recommend/${userId}?current_lat=39.0997&current_lon=-94.5786&limit=20`);
 
                 if (!response.ok) {
                     throw new Error('Failed to fetch recommendations');
