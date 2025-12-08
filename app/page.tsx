@@ -32,6 +32,8 @@ export default function Optimized() {
   const [selectedLoad, setSelectedLoad] = useState<Load | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isSearchModalOpen, setIsSearchModalOpen] = useState(false);
+  const [filteredLoads, setFilteredLoads] = useState<Load[]>([]);
+  const [isFiltering, setIsFiltering] = useState(false);
 
   // Split loads into different sections
   const loadsNearYou = mockLoads.slice(2, 6); // Oakland, SF, Modesto, Fresno
@@ -101,11 +103,58 @@ export default function Optimized() {
 
   const handleSearchFilters = (filters: SearchFilters) => {
     console.log('Applying filters:', filters);
-    // Here we would implement the actual filtering logic
-    // For now, if there is a delivery set, we can simulate the AI search
-    if (filters.delivery) {
-      handleAiSearch(filters.delivery);
-    }
+    setIsFiltering(true);
+
+    const results = mockLoads.filter(load => {
+      let matches = true;
+
+      // Filter by Origin
+      if (filters.origin) {
+        const originTerm = filters.origin.toLowerCase();
+        const cityMatch = load.pickup.city.toLowerCase().includes(originTerm);
+        const stateMatch = load.pickup.state.toLowerCase().includes(originTerm);
+        // Also check address if available, though UI mainly asks for City/State
+        const addressMatch = load.pickup.address?.toLowerCase().includes(originTerm);
+
+        matches = matches && (cityMatch || stateMatch || !!addressMatch);
+      }
+
+      // Filter by Delivery
+      if (filters.delivery) {
+        const deliveryTerm = filters.delivery.toLowerCase();
+        const cityMatch = load.delivery.city.toLowerCase().includes(deliveryTerm);
+        const stateMatch = load.delivery.state.toLowerCase().includes(deliveryTerm);
+
+        matches = matches && (cityMatch || stateMatch);
+      }
+
+      // Filter by Date Range
+      // Server data format: "Dec 17 2025"
+      if (filters.pickupDateFrom || filters.pickupDateTo) {
+        const loadDate = new Date(load.pickup.date);
+
+        if (filters.pickupDateFrom) {
+          const fromDate = new Date(filters.pickupDateFrom);
+          // Set to start of day for accurate comparison
+          fromDate.setHours(0, 0, 0, 0);
+          if (loadDate < fromDate) matches = false;
+        }
+
+        if (filters.pickupDateTo) {
+          const toDate = new Date(filters.pickupDateTo);
+          // Set to end of day
+          toDate.setHours(23, 59, 59, 999);
+          if (loadDate > toDate) matches = false;
+        }
+      }
+
+      return matches;
+    });
+
+    setFilteredLoads(results);
+
+    // Scroll to top to see results
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   const handleKeyElementDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
@@ -129,6 +178,12 @@ export default function Optimized() {
     window.location.href = `/book/${loadId}`;
   };
 
+  // Add function to clear search
+  const clearSearch = () => {
+    setIsFiltering(false);
+    setFilteredLoads([]);
+  };
+
   return (
     <div className="min-h-screen bg-white">
       {/* Search Bar - Fixed at top */}
@@ -141,6 +196,17 @@ export default function Optimized() {
           <div className="flex-1">
             <div className="text-gray-900 font-medium">Where to?</div>
           </div>
+          {isFiltering && (
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                clearSearch();
+              }}
+              className="text-xs font-semibold text-gray-500 hover:text-gray-900 bg-white px-2 py-1 rounded border border-gray-200"
+            >
+              Clear
+            </button>
+          )}
         </div>
         {error && (
           <div className="mt-2 text-sm text-red-600 bg-red-50 px-3 py-2 rounded">
@@ -157,8 +223,41 @@ export default function Optimized() {
 
       {/* Main Content - with bottom padding for nav */}
       <div className="">
+
+        {/* Filtered Results Section */}
+        {isFiltering && (
+          <div className="mb-6">
+            <div className="relative overflow-hidden w-full bg-gradient-to-r from-orange-500 to-orange-400 px-4 py-3 mb-4">
+              <div className="relative z-10">
+                <h2 className="text-2xl text-white font-bold mb-0">Search Results</h2>
+                <p className="text-base text-white">{filteredLoads.length} loads found</p>
+              </div>
+            </div>
+
+            {filteredLoads.length === 0 ? (
+              <div className="text-center py-8 px-4 text-gray-500">
+                No loads found matching your criteria. Try adjusting your filters.
+              </div>
+            ) : (
+              <div className="overflow-x-auto scrollbar-hide">
+                <div className="flex gap-3 px-4 pb-2">
+                  {filteredLoads.map((load) => (
+                    <OptimizedLoadCard
+                      key={load.id}
+                      load={load}
+                      onClick={() => handleLoadClick(load)}
+                      isWatched={isWatched(load.id)}
+                      onToggleWatch={() => toggleWatch(load)}
+                    />
+                  ))}
+                </div>
+              </div>
+            )}
+          </div>
+        )}
+
         {/* AI Generated Loads Section */}
-        {aiLoads.length > 0 && (
+        {aiLoads.length > 0 && !isFiltering && (
           <div className="mb-6">
             <div className="relative overflow-hidden w-full bg-gradient-to-r from-orange-500 to-orange-400 px-4 py-3 mb-4">
               <div className="relative z-10">
@@ -208,7 +307,7 @@ export default function Optimized() {
         )}
 
         {/* NAT/NAL Based Loads Section */}
-        {natNalData && natNalLoads.length > 0 && (
+        {natNalData && natNalLoads.length > 0 && !isFiltering && (
           <div className="mb-6">
             <div className="relative overflow-hidden w-full bg-gradient-to-r from-purple-500 to-purple-400 px-4 py-3 mb-4">
               <div className="relative z-10">
