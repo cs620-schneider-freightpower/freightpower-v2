@@ -46,7 +46,7 @@ export function SearchHistoryProvider({ children }: { children: ReactNode }) {
                     {
                         id: 'hist-default-2',
                         filters: {
-                            origin: 'San Antonio, TX',
+                            origin: 'Fort Lauderdale, FL', // Matches Load 2 (Reefer equipment)
                             radius: 100,
                             pickupDateFrom: '',
                             pickupDateTo: '',

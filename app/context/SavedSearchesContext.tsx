@@ -53,9 +53,9 @@ export function SavedSearchesProvider({ children }: { children: ReactNode }) {
                     },
                     {
                         id: 'default-2',
-                        name: 'Chicago Outbound',
+                        name: 'Ohio Outbound',
                         filters: {
-                            origin: 'Joliet, IL', // Matches Load 4 directly
+                            origin: 'Columbus, OH', // Matches Load 1 (Van equipment)
                             radius: 100,
                             pickupDateFrom: '',
                             pickupDateTo: '',

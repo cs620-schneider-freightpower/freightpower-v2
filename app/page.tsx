@@ -114,22 +114,53 @@ export default function Optimized() {
 
       // Filter by Origin
       if (filters.origin) {
-        const originTerm = filters.origin.toLowerCase();
-        const cityMatch = load.pickup.city.toLowerCase().includes(originTerm);
-        const stateMatch = load.pickup.state.toLowerCase().includes(originTerm);
-        // Also check address if available, though UI mainly asks for City/State
-        const addressMatch = load.pickup.address?.toLowerCase().includes(originTerm);
+        const originTerm = filters.origin.toLowerCase().trim();
+        const loadCity = load.pickup.city.toLowerCase();
+        const loadState = load.pickup.state.toLowerCase();
 
-        matches = matches && (cityMatch || stateMatch || !!addressMatch);
+        // Handle "City, State" format (e.g., "Columbus, OH")
+        if (originTerm.includes(',')) {
+          const parts = originTerm.split(',').map(p => p.trim());
+          const searchCity = parts[0];
+          const searchState = parts[1] || '';
+
+          const cityMatch = loadCity.includes(searchCity) || searchCity.includes(loadCity);
+          const stateMatch = loadState === searchState || loadState.includes(searchState) || searchState.includes(loadState);
+
+          matches = matches && cityMatch && (searchState === '' || stateMatch);
+        } else {
+          // Single term - check against city, state, or address
+          const cityMatch = loadCity.includes(originTerm) || originTerm.includes(loadCity);
+          const stateMatch = loadState.includes(originTerm) || originTerm.includes(loadState);
+          const addressMatch = load.pickup.address?.toLowerCase().includes(originTerm);
+
+          matches = matches && (cityMatch || stateMatch || !!addressMatch);
+        }
       }
 
       // Filter by Delivery
       if (filters.delivery) {
-        const deliveryTerm = filters.delivery.toLowerCase();
-        const cityMatch = load.delivery.city.toLowerCase().includes(deliveryTerm);
-        const stateMatch = load.delivery.state.toLowerCase().includes(deliveryTerm);
+        const deliveryTerm = filters.delivery.toLowerCase().trim();
+        const loadCity = load.delivery.city.toLowerCase();
+        const loadState = load.delivery.state.toLowerCase();
 
-        matches = matches && (cityMatch || stateMatch);
+        // Handle "City, State" format (e.g., "Tampa, FL")
+        if (deliveryTerm.includes(',')) {
+          const parts = deliveryTerm.split(',').map(p => p.trim());
+          const searchCity = parts[0];
+          const searchState = parts[1] || '';
+
+          const cityMatch = loadCity.includes(searchCity) || searchCity.includes(loadCity);
+          const stateMatch = loadState === searchState || loadState.includes(searchState) || searchState.includes(loadState);
+
+          matches = matches && cityMatch && (searchState === '' || stateMatch);
+        } else {
+          // Single term - check against city or state
+          const cityMatch = loadCity.includes(deliveryTerm) || deliveryTerm.includes(loadCity);
+          const stateMatch = loadState.includes(deliveryTerm) || deliveryTerm.includes(loadState);
+
+          matches = matches && (cityMatch || stateMatch);
+        }
       }
 
       // Filter by Date Range
