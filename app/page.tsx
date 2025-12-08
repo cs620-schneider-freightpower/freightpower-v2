@@ -12,6 +12,10 @@ import { useNatNal } from './context/NatNalContext';
 
 import { useWatchedLoads } from './context/WatchedLoadsContext';
 
+import SearchModal, { SearchFilters } from './components/SearchModal';
+
+// ... existing imports ...
+
 export default function Optimized() {
   const router = useRouter();
   const { natNalData } = useNatNal();
@@ -27,6 +31,8 @@ export default function Optimized() {
   const [searchedDestination, setSearchedDestination] = useState('');
   const [selectedLoad, setSelectedLoad] = useState<Load | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isSearchModalOpen, setIsSearchModalOpen] = useState(false);
+
   // Split loads into different sections
   const loadsNearYou = mockLoads.slice(2, 6); // Oakland, SF, Modesto, Fresno
   const californiaToTexas = mockLoads.filter(load =>
@@ -35,6 +41,7 @@ export default function Optimized() {
 
   // Filter loads based on NAT/NAL
   const natNalLoads = useMemo(() => {
+    // ... existing memo logic ...
     console.log('🔍 Filtering loads with NAT/NAL data:', natNalData);
 
     if (!natNalData) {
@@ -59,13 +66,14 @@ export default function Optimized() {
     return filtered;
   }, [natNalData]);
 
-  const handleSearch = async () => {
-    if (!searchInput.trim()) return;
+  // OLD handleSearch function kept for reference if needed, but not triggered by modal yet
+  const handleAiSearch = async (destination: string) => {
+    if (!destination.trim()) return;
 
     setIsLoading(true);
     setError(null);
     setAiLoads([]); // Clear previous results
-    setSearchedDestination(searchInput.trim());
+    setSearchedDestination(destination.trim());
 
     try {
       const response = await fetch('/api/generate-loads', {
@@ -73,7 +81,7 @@ export default function Optimized() {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ destination: searchInput.trim() }),
+        body: JSON.stringify({ destination: destination.trim() }),
       });
 
       const data = await response.json();
@@ -91,9 +99,18 @@ export default function Optimized() {
     }
   };
 
-  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+  const handleSearchFilters = (filters: SearchFilters) => {
+    console.log('Applying filters:', filters);
+    // Here we would implement the actual filtering logic
+    // For now, if there is a delivery set, we can simulate the AI search
+    if (filters.delivery) {
+      handleAiSearch(filters.delivery);
+    }
+  };
+
+  const handleKeyElementDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter') {
-      handleSearch();
+      // Legacy behavior
     }
   };
 
@@ -109,7 +126,6 @@ export default function Optimized() {
 
   const handleBookLoad = (loadId: string) => {
     // Navigate to the booking page
-    // alert('Load booked!')
     window.location.href = `/book/${loadId}`;
   };
 
@@ -117,18 +133,14 @@ export default function Optimized() {
     <div className="min-h-screen bg-white">
       {/* Search Bar - Fixed at top */}
       <div className="sticky top-0 z-20 bg-white px-4 pt-4 mb-2 border-b border-gray-100">
-        <div className="flex items-center bg-gray-200 rounded-lg px-4 py-3">
-          <Search className="w-5 h-5 text-gray-400 mr-3" />
-          <input
-            type="text"
-            placeholder="Enter City, State (e.g. Chicago, IL)"
-            className="flex-1 bg-transparent text-base outline-none text-gray-700 placeholder-gray-400"
-            value={searchInput}
-            onChange={(e) => setSearchInput(e.target.value)}
-            onKeyDown={handleKeyDown}
-            disabled={isLoading}
-          />
-          {isLoading && <Loader2 className="w-5 h-5 text-orange-500 animate-spin ml-2" />}
+        <div
+          className="flex items-center bg-gray-100 border border-gray-200 rounded-xl px-4 py-3 cursor-pointer hover:bg-gray-50 transition-colors shadow-sm"
+          onClick={() => setIsSearchModalOpen(true)}
+        >
+          <Search className="w-5 h-5 text-[#ff6b35] mr-3" />
+          <div className="flex-1">
+            <div className="text-gray-900 font-medium">Where to?</div>
+          </div>
         </div>
         {error && (
           <div className="mt-2 text-sm text-red-600 bg-red-50 px-3 py-2 rounded">
@@ -136,6 +148,12 @@ export default function Optimized() {
           </div>
         )}
       </div>
+
+      <SearchModal
+        isOpen={isSearchModalOpen}
+        onClose={() => setIsSearchModalOpen(false)}
+        onSearch={handleSearchFilters}
+      />
 
       {/* Main Content - with bottom padding for nav */}
       <div className="">
