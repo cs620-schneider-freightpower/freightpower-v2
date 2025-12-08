@@ -21,9 +21,14 @@ export function WatchedLoadsProvider({ children }: { children: ReactNode }) {
         try {
             const saved = localStorage.getItem('watchedLoads');
             if (saved) {
-                setWatchedLoads(JSON.parse(saved));
+                const parsed = JSON.parse(saved);
+                if (parsed.length === 0) {
+                    setWatchedLoads(mockLoads.slice(0, 3));
+                } else {
+                    setWatchedLoads(parsed);
+                }
             } else {
-                setWatchedLoads(mockLoads.slice(0, 2));
+                setWatchedLoads(mockLoads.slice(0, 3));
             }
         } catch (e) {
             console.error('Failed to load watched loads from localStorage:', e);
