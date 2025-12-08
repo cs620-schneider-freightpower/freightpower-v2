@@ -132,7 +132,8 @@ export const mockLoads: Load[] = [
       ]
     },
     "isReload": undefined,
-    "badge": "!"
+    "badge": "!",
+    status: 'assigned'
   },
   {
     "id": "5",
@@ -163,7 +164,8 @@ export const mockLoads: Load[] = [
       ]
     },
     "isReload": undefined,
-    "badge": undefined
+    "badge": undefined,
+    status: 'in-transit'
   },
   {
     "id": "6",
@@ -194,7 +196,8 @@ export const mockLoads: Load[] = [
       ]
     },
     "isReload": undefined,
-    "badge": undefined
+    "badge": undefined,
+    status: 'delivered'
   },
   {
     "id": "7",
@@ -225,7 +228,8 @@ export const mockLoads: Load[] = [
       ]
     },
     "isReload": true,
-    "badge": "!"
+    "badge": "!",
+    status: 'assigned'
   },
   {
     "id": "8",
@@ -256,7 +260,8 @@ export const mockLoads: Load[] = [
       ]
     },
     "isReload": undefined,
-    "badge": "!"
+    "badge": "!",
+    status: 'in-transit'
   },
   {
     "id": "9",
@@ -287,7 +292,8 @@ export const mockLoads: Load[] = [
       ]
     },
     "isReload": undefined,
-    "badge": undefined
+    "badge": undefined,
+    status: 'delivered'
   },
   {
     "id": "10",
@@ -318,7 +324,8 @@ export const mockLoads: Load[] = [
       ]
     },
     "isReload": true,
-    "badge": "!"
+    "badge": "!",
+    status: 'assigned'
   },
   {
     "id": "11",
@@ -349,7 +356,8 @@ export const mockLoads: Load[] = [
       ]
     },
     "isReload": true,
-    "badge": "!"
+    "badge": "!",
+    status: 'in-transit'
   },
   {
     "id": "12",
@@ -380,7 +388,8 @@ export const mockLoads: Load[] = [
       ]
     },
     "isReload": undefined,
-    "badge": "!"
+    "badge": "!",
+    status: 'delivered'
   },
   {
     "id": "13",
@@ -411,7 +420,8 @@ export const mockLoads: Load[] = [
       ]
     },
     "isReload": undefined,
-    "badge": undefined
+    "badge": undefined,
+    status: 'assigned'
   },
   {
     "id": "14",
@@ -442,7 +452,8 @@ export const mockLoads: Load[] = [
       ]
     },
     "isReload": undefined,
-    "badge": "!"
+    "badge": "!",
+    status: 'in-transit'
   },
   {
     "id": "15",
@@ -473,7 +484,8 @@ export const mockLoads: Load[] = [
       ]
     },
     "isReload": undefined,
-    "badge": undefined
+    "badge": undefined,
+    status: 'delivered'
   },
   {
     "id": "16",
@@ -504,7 +516,8 @@ export const mockLoads: Load[] = [
       ]
     },
     "isReload": undefined,
-    "badge": "!"
+    "badge": "!",
+    status: 'assigned'
   },
   {
     "id": "17",
