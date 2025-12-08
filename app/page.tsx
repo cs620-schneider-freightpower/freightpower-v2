@@ -7,6 +7,7 @@ import LoadDetailsModal from './components/LoadDetailsModal';
 import BottomNav from './components/search-results/BottomNav';
 import RecommendedLoadsRow from './components/RecommendedLoadsRow';
 import { mockLoads } from './data/mockLoads';
+import { madisonLoads } from './data/madisonLoads';
 import { Load } from './types/load';
 import { useNatNal } from './context/NatNalContext';
 
@@ -40,7 +41,7 @@ export default function Optimized() {
   const [isFiltering, setIsFiltering] = useState(false);
 
   // Split loads into different sections
-  const loadsNearYou = mockLoads.slice(2, 22); // Oakland, SF, Modesto, Fresno
+  const loadsNearYou = madisonLoads; // 20 loads near Madison, WI
   const californiaToTexas = mockLoads.filter(load =>
     load.pickup.state === 'CA' && load.delivery.state === 'TX'
   ).slice(0, 4);
@@ -455,7 +456,7 @@ export default function Optimized() {
         <div className="mb-4">
           <div className="relative overflow-hidden w-full bg-orange-300/90 px-4 py-2">
             <div className="relative z-10">
-              <h2 className="text-2xl text-white font-bold mb-0">Loads near Kansas City, MO</h2>
+              <h2 className="text-2xl text-white font-bold mb-0">Loads near Madison, WI</h2>
               <p className="text-base text-white ">Based on your current location</p>
             </div>
           </div>
