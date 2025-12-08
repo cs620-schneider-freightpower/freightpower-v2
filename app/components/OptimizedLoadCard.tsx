@@ -5,16 +5,18 @@ import { Heart, MapPin } from 'lucide-react';
 interface OptimizedLoadCardProps {
   load: Load;
   onClick?: () => void;
+  isWatched?: boolean;
+  onToggleWatch?: () => void;
 }
 
-export default function OptimizedLoadCard({ load, onClick }: OptimizedLoadCardProps) {
+export default function OptimizedLoadCard({ load, onClick, isWatched = false, onToggleWatch }: OptimizedLoadCardProps) {
   // Format weight to display as "41.6k lbs"
   const formatWeight = (weight: number) => {
     return `${(weight / 1000).toFixed(1)}k lbs`;
   };
 
   return (
-    <div 
+    <div
       className="bg-white rounded-xl shadow-sm border-2 border-gray-500/25 p-4 min-w-[280px] flex-shrink-0 cursor-pointer hover:shadow-md transition-shadow"
       onClick={onClick}
     >
@@ -28,11 +30,17 @@ export default function OptimizedLoadCard({ load, onClick }: OptimizedLoadCardPr
             </span>
           </div>
         </div>
-        <button 
+        <button
           className="p-1 hover:bg-gray-100 rounded-full transition-colors"
-          onClick={(e) => e.stopPropagation()}
+          onClick={(e) => {
+            e.stopPropagation();
+            onToggleWatch?.();
+          }}
         >
-          <Heart className="w-6 h-6 text-gray-400" />
+          <Heart
+            className={`w-6 h-6 transition-colors ${isWatched ? 'fill-red-500 text-red-500' : 'text-gray-400'
+              }`}
+          />
         </button>
       </div>
 

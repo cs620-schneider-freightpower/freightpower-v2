@@ -10,9 +10,12 @@ import { mockLoads } from './data/mockLoads';
 import { Load } from './types/load';
 import { useNatNal } from './context/NatNalContext';
 
+import { useWatchedLoads } from './context/WatchedLoadsContext';
+
 export default function Optimized() {
   const router = useRouter();
   const { natNalData } = useNatNal();
+  const { watchedLoads, toggleWatch, isWatched } = useWatchedLoads();
 
   console.log('🔷 Search page component rendered');
   console.log('🔷 NAT/NAL data from context:', natNalData);
@@ -24,7 +27,6 @@ export default function Optimized() {
   const [searchedDestination, setSearchedDestination] = useState('');
   const [selectedLoad, setSelectedLoad] = useState<Load | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
-
   // Split loads into different sections
   const loadsNearYou = mockLoads.slice(2, 6); // Oakland, SF, Modesto, Fresno
   const californiaToTexas = mockLoads.filter(load =>
@@ -155,6 +157,8 @@ export default function Optimized() {
                     key={load.id}
                     load={load}
                     onClick={() => handleLoadClick(load)}
+                    isWatched={isWatched(load.id)}
+                    onToggleWatch={() => toggleWatch(load)}
                   />
                 ))}
               </div>
@@ -205,6 +209,8 @@ export default function Optimized() {
                     key={load.id}
                     load={load}
                     onClick={() => handleLoadClick(load)}
+                    isWatched={isWatched(load.id)}
+                    onToggleWatch={() => toggleWatch(load)}
                   />
                 ))}
               </div>
@@ -213,7 +219,11 @@ export default function Optimized() {
         )}
 
         {/* Backend Recommended Loads Section */}
-        <RecommendedLoadsRow onLoadClick={handleLoadClick} />
+        <RecommendedLoadsRow
+          onLoadClick={handleLoadClick}
+          watchedLoadIds={new Set(watchedLoads.map(l => l.id))}
+          onToggleWatch={toggleWatch}
+        />
 
         {/* Loads for you Banner */}
         <div className="mb-4">
@@ -245,6 +255,8 @@ export default function Optimized() {
                   key={load.id}
                   load={load}
                   onClick={() => handleLoadClick(load)}
+                  isWatched={isWatched(load.id)}
+                  onToggleWatch={() => toggleWatch(load)}
                 />
               ))}
             </div>
@@ -279,6 +291,8 @@ export default function Optimized() {
                     key={load.id}
                     load={load}
                     onClick={() => handleLoadClick(load)}
+                    isWatched={isWatched(load.id)}
+                    onToggleWatch={() => toggleWatch(load)}
                   />
                 ))}
               </div>

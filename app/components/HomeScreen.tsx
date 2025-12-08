@@ -3,6 +3,10 @@ import { useState, useEffect } from 'react';
 import { Bell, Search, Loader2, ExternalLink } from 'lucide-react';
 import BottomNav from './search-results/BottomNav';
 import { useNatNal } from '../context/NatNalContext';
+import { useWatchedLoads } from '../context/WatchedLoadsContext';
+import { Load } from '../types/load';
+import RecommendedLoadsRow from './RecommendedLoadsRow';
+import OptimizedLoadCard from './OptimizedLoadCard';
 
 // Mock news data (Schneider News)
 const mockNews = [
@@ -58,12 +62,13 @@ export default function HomeScreen() {
   const [activeTab, setActiveTab] = useState('News');
   const [activeNewsTab, setActiveNewsTab] = useState<'Live News' | 'Schneider News'>('Live News');
   const [searchInput, setSearchInput] = useState('');
+  const { watchedLoads, toggleWatch } = useWatchedLoads();
   const { natNalData, setNatNalData } = useNatNal();
   const [isEditing, setIsEditing] = useState(!natNalData);
   const [liveNews, setLiveNews] = useState<NewsArticle[]>([]);
   const [isLoadingNews, setIsLoadingNews] = useState(false);
   const [newsError, setNewsError] = useState<string | null>(null);
-  
+
   // Form state
   const [formDate, setFormDate] = useState('');
   const [formTime, setFormTime] = useState('');
@@ -72,7 +77,7 @@ export default function HomeScreen() {
 
   const handleNatNalSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     if (formDate && formTime && formCity && formState) {
       const newData = {
         date: formDate,
@@ -124,7 +129,7 @@ export default function HomeScreen() {
     if (activeTab === 'News' && activeNewsTab === 'Live News' && liveNews.length === 0 && !isLoadingNews) {
       setIsLoadingNews(true);
       setNewsError(null);
-      
+
       fetch('/api/news')
         .then((res) => {
           if (!res.ok) {
@@ -159,19 +164,12 @@ export default function HomeScreen() {
         </button>
       </div>
 
-      {/* Search Bar */}
-      <div className="px-4 pt-4 pb-3 bg-white">
-        <div className="flex items-center bg-gray-100 rounded-lg px-4 py-3 border border-gray-200">
-          <Search className="w-5 h-5 text-[#ff6b35] mr-3" />
-          <input
-            type="text"
-            placeholder="Search by Load #"
-            className="flex-1 bg-transparent text-base outline-none text-gray-700 placeholder-gray-400"
-            value={searchInput}
-            onChange={(e) => setSearchInput(e.target.value)}
-          />
-        </div>
-      </div>
+      {/* Recommended Loads */}
+      <RecommendedLoadsRow
+        onLoadClick={(load) => console.log('Load clicked:', load)}
+        watchedLoadIds={new Set(watchedLoads.map(l => l.id))}
+        onToggleWatch={toggleWatch}
+      />
 
       {/* Tabs */}
       <div className="bg-white border-b flex">
@@ -179,11 +177,10 @@ export default function HomeScreen() {
           <button
             key={tab}
             onClick={() => setActiveTab(tab)}
-            className={`flex-1 py-3 text-center font-medium transition-colors ${
-              activeTab === tab
-                ? 'text-black border-b-2 border-[#ff6b35]'
-                : 'text-gray-500'
-            }`}
+            className={`flex-1 py-3 text-center font-medium transition-colors ${activeTab === tab
+              ? 'text-black border-b-2 border-[#ff6b35]'
+              : 'text-gray-500'
+              }`}
             type="button"
           >
             {tab}
@@ -201,11 +198,10 @@ export default function HomeScreen() {
                 <button
                   key={tab}
                   onClick={() => setActiveNewsTab(tab as 'Live News' | 'Schneider News')}
-                  className={`flex-1 py-3 text-center font-medium transition-colors ${
-                    activeNewsTab === tab
-                      ? 'text-black border-b-2 border-[#ff6b35]'
-                      : 'text-gray-500'
-                  }`}
+                  className={`flex-1 py-3 text-center font-medium transition-colors ${activeNewsTab === tab
+                    ? 'text-black border-b-2 border-[#ff6b35]'
+                    : 'text-gray-500'
+                    }`}
                   type="button"
                 >
                   {tab}
@@ -222,7 +218,7 @@ export default function HomeScreen() {
                     <span className="text-gray-600">Loading live news...</span>
                   </div>
                 )}
-                
+
                 {newsError && (
                   <div className="bg-red-50 border border-red-200 rounded-lg p-4 text-red-700 text-sm">
                     {newsError}
@@ -293,7 +289,7 @@ export default function HomeScreen() {
             )}
           </div>
         )}
-        
+
         {activeTab === 'NAT / NAL' && (
           <div className="px-4 py-4">
             {natNalData && !isEditing ? (
@@ -304,11 +300,11 @@ export default function HomeScreen() {
                   <div>
                     <p className="text-sm text-gray-600 mb-1">Next Available Time</p>
                     <p className="text-lg font-semibold text-gray-900">
-                      {new Date(natNalData.date).toLocaleDateString('en-US', { 
-                        weekday: 'short', 
-                        year: 'numeric', 
-                        month: 'short', 
-                        day: 'numeric' 
+                      {new Date(natNalData.date).toLocaleDateString('en-US', {
+                        weekday: 'short',
+                        year: 'numeric',
+                        month: 'short',
+                        day: 'numeric'
                       })} at {natNalData.time}
                     </p>
                   </div>
@@ -345,7 +341,7 @@ export default function HomeScreen() {
                     Enter your Next Available Time and Next Available Location to get personalized load recommendations
                   </p>
                 </div>
-                
+
                 <form onSubmit={handleNatNalSubmit} className="space-y-4">
                   {/* Next Available Time Section */}
                   <div className="bg-gray-50 rounded-lg p-4 border border-gray-200">
@@ -475,10 +471,27 @@ export default function HomeScreen() {
             )}
           </div>
         )}
-        
+
         {activeTab === 'Watched' && (
-          <div className="px-4 py-4">
-            <p className="text-gray-500 text-center">No watched loads yet</p>
+          <div className="px-4 py-4 space-y-4">
+            {watchedLoads.length === 0 ? (
+              <div className="text-center py-8">
+                <p className="text-gray-500 mb-2">No watched loads yet</p>
+                <p className="text-sm text-gray-400">Tap the heart icon on any load to add it to your watchlist</p>
+              </div>
+            ) : (
+              <div className="flex flex-col gap-4">
+                {watchedLoads.map(load => (
+                  <OptimizedLoadCard
+                    key={load.id}
+                    load={load}
+                    isWatched={true}
+                    onToggleWatch={() => toggleWatch(load)}
+                    onClick={() => console.log('Load clicked:', load)}
+                  />
+                ))}
+              </div>
+            )}
           </div>
         )}
       </div>

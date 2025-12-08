@@ -6,9 +6,11 @@ import OptimizedLoadCard from './OptimizedLoadCard';
 
 interface RecommendedLoadsRowProps {
     onLoadClick: (load: Load) => void;
+    watchedLoadIds: Set<string>;
+    onToggleWatch: (load: Load) => void;
 }
 
-export default function RecommendedLoadsRow({ onLoadClick }: RecommendedLoadsRowProps) {
+export default function RecommendedLoadsRow({ onLoadClick, watchedLoadIds, onToggleWatch }: RecommendedLoadsRowProps) {
     const [loads, setLoads] = useState<Load[]>([]);
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
@@ -101,6 +103,8 @@ export default function RecommendedLoadsRow({ onLoadClick }: RecommendedLoadsRow
                             key={load.id}
                             load={load}
                             onClick={() => onLoadClick(load)}
+                            isWatched={watchedLoadIds.has(load.id)}
+                            onToggleWatch={() => onToggleWatch(load)}
                         />
                     ))}
                 </div>
