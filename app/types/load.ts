@@ -31,4 +31,5 @@ export interface Load {
   isReload?: boolean;
   requirements?: string[];
   equipmentType?: 'Van' | 'Reefer' | 'Flatbed';
+  status?: 'assigned' | 'in-transit' | 'delivered';
 }

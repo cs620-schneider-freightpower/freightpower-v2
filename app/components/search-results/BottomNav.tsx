@@ -22,7 +22,7 @@ export default function BottomNav() {
 
     const navItems = [
         { icon: Home, label: 'Home', path: basePath || '/', active: isHomePage },
-        { icon: FileText, label: 'My Loads', path: null, active: false },
+        { icon: FileText, label: 'My Loads', path: '/my-loads', active: pathname.startsWith('/my-loads') },
         { icon: MapPin, label: 'NAT / NAL', path: `${basePath}/nat-nal`, active: isNatNalPage },
         { icon: MoreHorizontal, label: 'More', path: `${basePath}/more`, active: isMorePage },
     ];
