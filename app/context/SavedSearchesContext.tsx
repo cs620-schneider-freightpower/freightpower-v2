@@ -34,28 +34,39 @@ export function SavedSearchesProvider({ children }: { children: ReactNode }) {
                 const defaults: SavedSearch[] = [
                     {
                         id: 'default-1',
-                        name: 'Chicago to Dallas',
-                        filters: {
-                            origin: 'Chicago, IL',
-                            radius: 50,
-                            pickupDateFrom: '',
-                            pickupDateTo: '',
-                            delivery: 'Dallas, TX',
-                            equipmentType: 'Van'
-                        },
-                        createdAt: Date.now()
-                    },
-                    {
-                        id: 'default-2',
-                        name: 'High Rate Reefers',
+                        name: 'Florida Inbound',
                         filters: {
                             origin: '',
                             radius: 50,
                             pickupDateFrom: '',
                             pickupDateTo: '',
+                            delivery: 'Tampa, FL', // Matches Load 11 directly or near logic
+                            minRPM: '',
+                            minTripDistance: '',
+                            maxTripDistance: '',
+                            maxWeight: '',
+                            maxDeadhead: '',
+                            equipmentType: undefined,
+                            excludedServices: []
+                        },
+                        createdAt: Date.now()
+                    },
+                    {
+                        id: 'default-2',
+                        name: 'Chicago Outbound',
+                        filters: {
+                            origin: 'Joliet, IL', // Matches Load 4 directly
+                            radius: 100,
+                            pickupDateFrom: '',
+                            pickupDateTo: '',
                             delivery: '',
-                            minRPM: '3.00',
-                            equipmentType: 'Reefer'
+                            minRPM: '',
+                            minTripDistance: '',
+                            maxTripDistance: '',
+                            maxWeight: '',
+                            maxDeadhead: '',
+                            equipmentType: 'Van',
+                            excludedServices: []
                         },
                         createdAt: Date.now()
                     }

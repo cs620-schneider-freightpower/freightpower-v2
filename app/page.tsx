@@ -1,7 +1,7 @@
 "use client"
 import { useState, useMemo } from 'react';
 import { useRouter } from 'next/navigation';
-import { Search, Loader2, Heart } from 'lucide-react';
+import { Search, Loader2, Heart, Clock } from 'lucide-react';
 import OptimizedLoadCard from './components/OptimizedLoadCard';
 import LoadDetailsModal from './components/LoadDetailsModal';
 import BottomNav from './components/search-results/BottomNav';
@@ -12,6 +12,7 @@ import { useNatNal } from './context/NatNalContext';
 
 import { useWatchedLoads } from './context/WatchedLoadsContext';
 import SavedSearchesModal from './components/SavedSearchesModal';
+import SearchHistoryModal from './components/SearchHistoryModal';
 
 import SearchModal, { SearchFilters } from './components/SearchModal';
 
@@ -34,6 +35,7 @@ export default function Optimized() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isSearchModalOpen, setIsSearchModalOpen] = useState(false);
   const [isSavedSearchesModalOpen, setIsSavedSearchesModalOpen] = useState(false);
+  const [isHistoryModalOpen, setIsHistoryModalOpen] = useState(false);
   const [filteredLoads, setFilteredLoads] = useState<Load[]>([]);
   const [isFiltering, setIsFiltering] = useState(false);
 
@@ -269,6 +271,14 @@ export default function Optimized() {
         >
           <Heart className="w-5 h-5" />
         </button>
+
+        {/* History Button */}
+        <button
+          onClick={() => setIsHistoryModalOpen(true)}
+          className="ml-2 p-3 rounded-xl bg-gray-100 border border-gray-200 text-gray-500 hover:text-blue-600 hover:bg-blue-50 transition-colors shadow-sm"
+        >
+          <Clock className="w-5 h-5" />
+        </button>
       </div>
 
       <SearchModal
@@ -280,6 +290,12 @@ export default function Optimized() {
       <SavedSearchesModal
         isOpen={isSavedSearchesModalOpen}
         onClose={() => setIsSavedSearchesModalOpen(false)}
+        onApplySearch={handleSearchFilters}
+      />
+
+      <SearchHistoryModal
+        isOpen={isHistoryModalOpen}
+        onClose={() => setIsHistoryModalOpen(false)}
         onApplySearch={handleSearchFilters}
       />
 

@@ -4,6 +4,7 @@ import "./globals.css";
 import { NatNalProvider } from './context/NatNalContext';
 import { WatchedLoadsProvider } from './context/WatchedLoadsContext';
 import { SavedSearchesProvider } from './context/SavedSearchesContext';
+import { SearchHistoryProvider } from './context/SearchHistoryContext';
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -33,7 +34,9 @@ export default function RootLayout({
         <NatNalProvider>
           <WatchedLoadsProvider>
             <SavedSearchesProvider>
-              {children}
+              <SearchHistoryProvider>
+                {children}
+              </SearchHistoryProvider>
             </SavedSearchesProvider>
           </WatchedLoadsProvider>
         </NatNalProvider>

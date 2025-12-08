@@ -4,6 +4,7 @@ import { useState, useMemo } from 'react';
 import { X, MapPin, Calendar, Search, ArrowRight, ChevronDown, ChevronUp, SlidersHorizontal, Truck, DollarSign, Route, Scale, ClipboardList, Heart } from 'lucide-react';
 import { US_CITIES } from '../data/cities';
 import { useSavedSearches } from '../context/SavedSearchesContext';
+import { useSearchHistory } from '../context/SearchHistoryContext';
 
 interface SearchModalProps {
     isOpen: boolean;
@@ -28,6 +29,7 @@ export interface SearchFilters {
 
 export default function SearchModal({ isOpen, onClose, onSearch }: SearchModalProps) {
     const { saveSearch, isSearchSaved } = useSavedSearches();
+    const { addToHistory } = useSearchHistory();
     const [origin, setOrigin] = useState('');
     const [radius, setRadius] = useState(50);
     const [showRadiusSlider, setShowRadiusSlider] = useState(false);
@@ -56,7 +58,7 @@ export default function SearchModal({ isOpen, onClose, onSearch }: SearchModalPr
     if (!isOpen) return null;
 
     const handleSearch = () => {
-        onSearch({
+        const filters = {
             origin,
             radius,
             pickupDateFrom,
@@ -69,7 +71,9 @@ export default function SearchModal({ isOpen, onClose, onSearch }: SearchModalPr
             maxDeadhead,
             equipmentType,
             excludedServices
-        });
+        };
+        addToHistory(filters);
+        onSearch(filters);
         onClose();
     };
 
