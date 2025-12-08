@@ -15,15 +15,15 @@ export default function BottomNav() {
   const basePath = isDemo ? '/demo' : isOptimized ? '/optimized' : '';
 
   // Determine which page is active
-  const isHomePage = pathname.includes('/home');
-  const isSearchPage = !isHomePage && (isDemo || isOptimized || pathname === '/');
+  const isMorePage = pathname.includes('/more');
+  // Home page is now the root / search page
+  const isHomePage = !isMorePage && !pathname.includes('/my-loads') && !pathname.includes('/manage') && (isDemo || isOptimized || pathname === '/');
 
   const navItems = [
-    { icon: Home, label: 'Home', path: `${basePath}/home`, active: pathname.includes('/home') },
-    { icon: Search, label: 'Search', path: basePath || '/', active: isSearchPage },
+    { icon: Home, label: 'Home', path: basePath || '/', active: isHomePage },
     { icon: FileText, label: 'My Loads', path: null, active: false },
     { icon: Settings, label: 'Manage', path: null, active: false },
-    { icon: MoreHorizontal, label: 'More', path: null, active: false },
+    { icon: MoreHorizontal, label: 'More', path: `${basePath}/more`, active: isMorePage },
   ];
 
   return (
@@ -58,3 +58,4 @@ export default function BottomNav() {
     </div>
   );
 }
+

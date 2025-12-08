@@ -1,6 +1,6 @@
 import HomeScreen from '../components/HomeScreen';
 
-export default function OptimizedHome() {
+export default function MorePage() {
   return <HomeScreen />;
 }
 
