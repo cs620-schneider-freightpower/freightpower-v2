@@ -5,6 +5,7 @@ import { NatNalProvider } from './context/NatNalContext';
 import { WatchedLoadsProvider } from './context/WatchedLoadsContext';
 import { SavedSearchesProvider } from './context/SavedSearchesContext';
 import { SearchHistoryProvider } from './context/SearchHistoryContext';
+import { UserProvider } from './context/UserContext';
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -32,13 +33,15 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         <NatNalProvider>
-          <WatchedLoadsProvider>
-            <SavedSearchesProvider>
-              <SearchHistoryProvider>
-                {children}
-              </SearchHistoryProvider>
-            </SavedSearchesProvider>
-          </WatchedLoadsProvider>
+          <UserProvider>
+            <WatchedLoadsProvider>
+              <SavedSearchesProvider>
+                <SearchHistoryProvider>
+                  {children}
+                </SearchHistoryProvider>
+              </SavedSearchesProvider>
+            </WatchedLoadsProvider>
+          </UserProvider>
         </NatNalProvider>
       </body>
     </html>

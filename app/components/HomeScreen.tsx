@@ -1,9 +1,10 @@
 "use client"
 import { useState, useEffect } from 'react';
-import { Bell, Search, Loader2, ExternalLink, MessageSquare, Settings, Bot, HelpCircle, MapPin, LifeBuoy, Sun, Users, CircleParking, Star } from 'lucide-react';
+import { Bell, Search, Loader2, ExternalLink, MessageSquare, Settings, Bot, HelpCircle, MapPin, LifeBuoy, Sun, Users, CircleParking, Star, Check } from 'lucide-react';
 import BottomNav from './search-results/BottomNav';
 import { useNatNal } from '../context/NatNalContext';
 import { useWatchedLoads } from '../context/WatchedLoadsContext';
+import { useUser, DEMO_USER_IDS } from '../context/UserContext';
 import { Load } from '../types/load';
 import LoadDetailsModal from './LoadDetailsModal';
 import RecommendedLoadsRow from './RecommendedLoadsRow';
@@ -65,6 +66,7 @@ export default function HomeScreen() {
   const [searchInput, setSearchInput] = useState('');
   const { watchedLoads, toggleWatch } = useWatchedLoads();
   const { natNalData, setNatNalData } = useNatNal();
+  const { userId, setUserId } = useUser();
   const [liveNews, setLiveNews] = useState<NewsArticle[]>([]);
   const [isLoadingNews, setIsLoadingNews] = useState(false);
   const [newsError, setNewsError] = useState<string | null>(null);
@@ -146,7 +148,7 @@ export default function HomeScreen() {
 
       {/* Tabs */}
       <div className="bg-white border-b flex sticky top-0 z-10 shadow-sm">
-        {['News', 'Watched Loads'].map((tab) => (
+        {['News', 'Watched Loads', 'Demo'].map((tab) => (
           <button
             key={tab}
             onClick={() => setActiveTab(tab)}
@@ -297,6 +299,58 @@ export default function HomeScreen() {
                 ))}
               </div>
             )}
+          </div>
+        )}
+
+        {activeTab === 'Demo' && (
+          <div className="px-4 py-4 space-y-4">
+            <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden mb-6">
+              <div className="px-4 py-3 border-b border-gray-100 bg-gray-50/50">
+                <h2 className="font-semibold text-gray-900 flex items-center gap-2">
+                  <Users className="w-4 h-4 text-[#ff6b35]" />
+                  Demo Configuration
+                </h2>
+              </div>
+
+              <div className="p-4">
+                <p className="text-sm text-gray-500 mb-4">
+                  Select the active user ID to simulate different recommendation profiles.
+                  This will update the "Recommended for you" section on the Home page.
+                </p>
+
+                <div className="space-y-2">
+                  <label className="text-xs font-bold text-gray-500 uppercase tracking-wider block">
+                    Active User ID
+                  </label>
+
+                  <div className="grid grid-cols-1 gap-2">
+                    {DEMO_USER_IDS.map((id) => (
+                      <button
+                        key={id}
+                        onClick={() => setUserId(id)}
+                        className={`flex items-center justify-between px-4 py-3 rounded-lg border text-left transition-all ${userId === id
+                          ? 'bg-orange-50 border-[#ff6b35] shadow-sm'
+                          : 'bg-white border-gray-200 hover:border-gray-300 hover:bg-gray-50'
+                          }`}
+                      >
+                        <span className={`font-medium ${userId === id ? 'text-[#ff6b35]' : 'text-gray-700'}`}>
+                          User {id}
+                        </span>
+                        {userId === id && (
+                          <Check className="w-5 h-5 text-[#ff6b35]" />
+                        )}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
+                <div className="mt-4 pt-4 border-t border-gray-100">
+                  <p className="text-xs text-center text-gray-400">
+                    Current Active ID: <span className="font-mono">{userId}</span>
+                  </p>
+                </div>
+              </div>
+            </div>
           </div>
         )}
       </div>

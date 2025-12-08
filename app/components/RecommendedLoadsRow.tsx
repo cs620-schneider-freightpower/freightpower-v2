@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import { Load } from '../types/load';
 import OptimizedLoadCard from './OptimizedLoadCard';
+import { useUser } from '../context/UserContext';
 
 interface RecommendedLoadsRowProps {
     onLoadClick: (load: Load) => void;
@@ -11,16 +12,18 @@ interface RecommendedLoadsRowProps {
 }
 
 export default function RecommendedLoadsRow({ onLoadClick, watchedLoadIds, onToggleWatch }: RecommendedLoadsRowProps) {
+    const { userId } = useUser();
     const [loads, setLoads] = useState<Load[]>([]);
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
 
     useEffect(() => {
         async function fetchLoads() {
+            setIsLoading(true);
             try {
                 // Using hardcoded coordinates for Kansas City to ensure we get data for now
                 // In a real app, this would come from the user's location or profile
-                const response = await fetch('http://localhost:8000/recommend/1450181150?current_lat=39.0997&current_lon=-94.5786');
+                const response = await fetch(`http://localhost:8000/recommend/${userId}?current_lat=39.0997&current_lon=-94.5786`);
 
                 if (!response.ok) {
                     throw new Error('Failed to fetch recommendations');
@@ -60,7 +63,7 @@ export default function RecommendedLoadsRow({ onLoadClick, watchedLoadIds, onTog
         }
 
         fetchLoads();
-    }, []);
+    }, [userId]);
 
     if (error) return null; // Hide section on error
 
