@@ -3,6 +3,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { NatNalProvider } from './context/NatNalContext';
 import { WatchedLoadsProvider } from './context/WatchedLoadsContext';
+import { SavedSearchesProvider } from './context/SavedSearchesContext';
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -31,7 +32,9 @@ export default function RootLayout({
       >
         <NatNalProvider>
           <WatchedLoadsProvider>
-            {children}
+            <SavedSearchesProvider>
+              {children}
+            </SavedSearchesProvider>
           </WatchedLoadsProvider>
         </NatNalProvider>
       </body>

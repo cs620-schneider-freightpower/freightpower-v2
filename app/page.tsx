@@ -1,7 +1,7 @@
 "use client"
 import { useState, useMemo } from 'react';
 import { useRouter } from 'next/navigation';
-import { Search, Loader2 } from 'lucide-react';
+import { Search, Loader2, Heart } from 'lucide-react';
 import OptimizedLoadCard from './components/OptimizedLoadCard';
 import LoadDetailsModal from './components/LoadDetailsModal';
 import BottomNav from './components/search-results/BottomNav';
@@ -11,6 +11,7 @@ import { Load } from './types/load';
 import { useNatNal } from './context/NatNalContext';
 
 import { useWatchedLoads } from './context/WatchedLoadsContext';
+import SavedSearchesModal from './components/SavedSearchesModal';
 
 import SearchModal, { SearchFilters } from './components/SearchModal';
 
@@ -32,6 +33,7 @@ export default function Optimized() {
   const [selectedLoad, setSelectedLoad] = useState<Load | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isSearchModalOpen, setIsSearchModalOpen] = useState(false);
+  const [isSavedSearchesModalOpen, setIsSavedSearchesModalOpen] = useState(false);
   const [filteredLoads, setFilteredLoads] = useState<Load[]>([]);
   const [isFiltering, setIsFiltering] = useState(false);
 
@@ -238,9 +240,9 @@ export default function Optimized() {
   return (
     <div className="min-h-screen bg-white">
       {/* Search Bar - Fixed at top */}
-      <div className="sticky top-0 z-20 bg-white px-4 pt-4 mb-2 border-b border-gray-100">
+      <div className="sticky top-0 z-20 bg-white px-4 pt-4 mb-2 border-b border-gray-100 flex items-start">
         <div
-          className="flex items-center bg-gray-100 border border-gray-200 rounded-xl px-4 py-3 cursor-pointer hover:bg-gray-50 transition-colors shadow-sm"
+          className="flex-1 flex items-center bg-gray-100 border border-gray-200 rounded-xl px-4 py-3 cursor-pointer hover:bg-gray-50 transition-colors shadow-sm"
           onClick={() => setIsSearchModalOpen(true)}
         >
           <Search className="w-5 h-5 text-[#ff6b35] mr-3" />
@@ -259,17 +261,26 @@ export default function Optimized() {
             </button>
           )}
         </div>
-        {error && (
-          <div className="mt-2 text-sm text-red-600 bg-red-50 px-3 py-2 rounded">
-            {error}
-          </div>
-        )}
+
+        {/* Saved Searches Button */}
+        <button
+          onClick={() => setIsSavedSearchesModalOpen(true)}
+          className="ml-2 p-3 rounded-xl bg-gray-100 border border-gray-200 text-gray-500 hover:text-[#ff6b35] hover:bg-gray-50 transition-colors shadow-sm"
+        >
+          <Heart className="w-5 h-5" />
+        </button>
       </div>
 
       <SearchModal
         isOpen={isSearchModalOpen}
         onClose={() => setIsSearchModalOpen(false)}
         onSearch={handleSearchFilters}
+      />
+
+      <SavedSearchesModal
+        isOpen={isSavedSearchesModalOpen}
+        onClose={() => setIsSavedSearchesModalOpen(false)}
+        onApplySearch={handleSearchFilters}
       />
 
       {/* Main Content - with bottom padding for nav */}

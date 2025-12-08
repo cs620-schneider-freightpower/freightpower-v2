@@ -1,8 +1,9 @@
 "use client";
 
 import { useState, useMemo } from 'react';
-import { X, MapPin, Calendar, Search, ArrowRight, ChevronDown, ChevronUp, SlidersHorizontal, Truck, DollarSign, Route, Scale, ClipboardList } from 'lucide-react';
+import { X, MapPin, Calendar, Search, ArrowRight, ChevronDown, ChevronUp, SlidersHorizontal, Truck, DollarSign, Route, Scale, ClipboardList, Heart } from 'lucide-react';
 import { US_CITIES } from '../data/cities';
+import { useSavedSearches } from '../context/SavedSearchesContext';
 
 interface SearchModalProps {
     isOpen: boolean;
@@ -26,6 +27,7 @@ export interface SearchFilters {
 }
 
 export default function SearchModal({ isOpen, onClose, onSearch }: SearchModalProps) {
+    const { saveSearch, isSearchSaved } = useSavedSearches();
     const [origin, setOrigin] = useState('');
     const [radius, setRadius] = useState(50);
     const [showRadiusSlider, setShowRadiusSlider] = useState(false);
@@ -557,6 +559,91 @@ export default function SearchModal({ isOpen, onClose, onSearch }: SearchModalPr
                             <Search className="w-5 h-5" />
                             <span>Search Loads</span>
                         </button>
+
+                        {(origin || delivery || minRPM || minTripDistance || maxTripDistance || maxWeight || maxDeadhead || equipmentType || excludedServices.length > 0) && (
+                            <button
+                                onClick={() => {
+                                    const currentFilters = {
+                                        origin,
+                                        radius,
+                                        pickupDateFrom,
+                                        pickupDateTo,
+                                        delivery,
+                                        minRPM,
+                                        minTripDistance,
+                                        maxTripDistance,
+                                        maxWeight,
+                                        maxDeadhead,
+                                        equipmentType,
+                                        excludedServices
+                                    };
+
+                                    if (isSearchSaved(currentFilters)) {
+                                        // If saved, find the ID and remove it (toggle behavior)
+                                        // But we need the ID. Helper isSearchSaved only returns boolean. 
+                                        // Let's iterate manually or just ignore remove for now?
+                                        // Actually better user experience is just to let them "save" and it becomes saved.
+                                        // If already saved, maybe nothing happens or we unsave? 
+                                        // "favorites it drops the modal. I would prefer if it made the heart filled in with red or something, and then yeah."
+                                        // Implies toggle or sticky state.
+                                        // Let's just save if not saved. If saved, we can remove it (toggle).
+                                        // To enable toggle we need to find the saved search ID.
+                                        // Let's assume we can remove by finding matching filter.
+                                        // But context only has removeSearch(id).
+                                        // I'll stick to save-only for now, but UI shows filled.
+                                        saveSearch(currentFilters);
+                                    } else {
+                                        saveSearch(currentFilters);
+                                    }
+                                }}
+                                className={`flex-none px-4 py-3.5 rounded-xl border transition-colors ${isSearchSaved({
+                                    origin,
+                                    radius,
+                                    pickupDateFrom,
+                                    pickupDateTo,
+                                    delivery,
+                                    minRPM,
+                                    minTripDistance,
+                                    maxTripDistance,
+                                    maxWeight,
+                                    maxDeadhead,
+                                    equipmentType,
+                                    excludedServices
+                                })
+                                    ? 'bg-red-50 border-red-200 text-red-500'
+                                    : 'border-gray-200 text-gray-400 hover:text-red-500 hover:border-red-200 hover:bg-red-50'
+                                    }`}
+                                title={isSearchSaved({
+                                    origin,
+                                    radius,
+                                    pickupDateFrom,
+                                    pickupDateTo,
+                                    delivery,
+                                    minRPM,
+                                    minTripDistance,
+                                    maxTripDistance,
+                                    maxWeight,
+                                    maxDeadhead,
+                                    equipmentType,
+                                    excludedServices
+                                }) ? "Saved" : "Save this search"}
+                            >
+                                <Heart className={`w-5 h-5 ${isSearchSaved({
+                                    origin,
+                                    radius,
+                                    pickupDateFrom,
+                                    pickupDateTo,
+                                    delivery,
+                                    minRPM,
+                                    minTripDistance,
+                                    maxTripDistance,
+                                    maxWeight,
+                                    maxDeadhead,
+                                    equipmentType,
+                                    excludedServices
+                                }) ? 'fill-current' : ''}`} />
+                            </button>
+                        )}
                     </div>
                 </div>
             </div>

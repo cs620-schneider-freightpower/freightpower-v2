@@ -1,6 +1,6 @@
 "use client"
 import { Load } from '../types/load';
-import { Heart, MapPin } from 'lucide-react';
+import { Eye, MapPin } from 'lucide-react';
 
 interface OptimizedLoadCardProps {
   load: Load;
@@ -37,8 +37,8 @@ export default function OptimizedLoadCard({ load, onClick, isWatched = false, on
             onToggleWatch?.();
           }}
         >
-          <Heart
-            className={`w-6 h-6 transition-colors ${isWatched ? 'fill-red-500 text-red-500' : 'text-gray-400'
+          <Eye
+            className={`w-6 h-6 transition-colors ${isWatched ? 'stroke-[#ff6b35] text-[#ff6b35]' : 'text-gray-400'
               }`}
           />
         </button>

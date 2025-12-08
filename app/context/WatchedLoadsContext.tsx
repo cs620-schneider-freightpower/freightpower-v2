@@ -2,6 +2,7 @@
 
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import { Load } from '../types/load';
+import { mockLoads } from '../data/mockLoads';
 
 interface WatchedLoadsContextType {
     watchedLoads: Load[];
@@ -21,6 +22,8 @@ export function WatchedLoadsProvider({ children }: { children: ReactNode }) {
             const saved = localStorage.getItem('watchedLoads');
             if (saved) {
                 setWatchedLoads(JSON.parse(saved));
+            } else {
+                setWatchedLoads(mockLoads.slice(0, 2));
             }
         } catch (e) {
             console.error('Failed to load watched loads from localStorage:', e);
