@@ -42,6 +42,9 @@ export default function Optimized() {
 
   // Split loads into different sections
   const loadsNearYou = madisonLoads; // 20 loads near Madison, WI
+  const chicagoLoads = madisonLoads.filter(load =>
+    load.delivery.city === 'Chicago' && load.delivery.state === 'IL'
+  );
   const californiaToTexas = mockLoads.filter(load =>
     load.pickup.state === 'CA' && load.delivery.state === 'TX'
   ).slice(0, 4);
@@ -489,6 +492,33 @@ export default function Optimized() {
             </div>
           </div>
         </div>
+
+        {/* Chicago Loads Section */}
+        {chicagoLoads.length > 0 && (
+          <div className="mb-6">
+            <div className="relative overflow-hidden w-full bg-gradient-to-r from-blue-600 to-blue-500 px-4 py-3 mb-4">
+              <div className="relative z-10">
+                <h2 className="text-2xl text-white font-bold mb-0">Loads to Chicago, IL</h2>
+                <p className="text-base text-white">High demand lane • {chicagoLoads.length} loads available</p>
+              </div>
+            </div>
+
+            {/* Horizontal Scroll Container */}
+            <div className="overflow-x-auto scrollbar-hide">
+              <div className="flex gap-3 px-4 pb-2">
+                {chicagoLoads.map((load) => (
+                  <OptimizedLoadCard
+                    key={load.id}
+                    load={load}
+                    onClick={() => handleLoadClick(load)}
+                    isWatched={isWatched(load.id)}
+                    onToggleWatch={() => toggleWatch(load)}
+                  />
+                ))}
+              </div>
+            </div>
+          </div>
+        )}
 
         {/* California to Texas Route Section */}
         {californiaToTexas.length > 0 && (

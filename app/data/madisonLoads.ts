@@ -565,5 +565,89 @@ export const madisonLoads: Load[] = [
         },
         "equipmentType": "Van",
         "status": "assigned"
+    },
+    {
+        "id": "mad-21",
+        "price": 900,
+        "distance": 145,
+        "weight": 35000,
+        "loadedRPM": 6.20,
+        "estTotalRPM": 5.00,
+        "pickup": {
+            "city": "Madison",
+            "state": "WI",
+            "date": "Dec 20 2025",
+            "time": "08:00 AM",
+            "emptyMiles": 10,
+            "address": "123 Capital Ave",
+            "liveLoad": true
+        },
+        "delivery": {
+            "city": "Chicago",
+            "state": "IL",
+            "date": "Dec 20 2025",
+            "time": "12:00 PM",
+            "emptyMiles": 15,
+            "address": "456 Windy City Way",
+            "instructions": ["Urban delivery"]
+        },
+        "equipmentType": "Van",
+        "status": "assigned"
+    },
+    {
+        "id": "mad-22",
+        "price": 950,
+        "distance": 145,
+        "weight": 40000,
+        "loadedRPM": 6.55,
+        "estTotalRPM": 5.20,
+        "pickup": {
+            "city": "Sun Prairie",
+            "state": "WI",
+            "date": "Dec 21 2025",
+            "time": "09:00 AM",
+            "emptyMiles": 12,
+            "address": "789 Corn Field Ln",
+            "liveLoad": false
+        },
+        "delivery": {
+            "city": "Chicago",
+            "state": "IL",
+            "date": "Dec 21 2025",
+            "time": "01:00 PM",
+            "emptyMiles": 20,
+            "address": "321 Lakeshore Dr",
+            "instructions": ["Dock high"]
+        },
+        "equipmentType": "Reefer",
+        "status": "assigned"
+    },
+    {
+        "id": "mad-23",
+        "price": 880,
+        "distance": 145,
+        "weight": 28000,
+        "loadedRPM": 6.07,
+        "estTotalRPM": 4.80,
+        "pickup": {
+            "city": "Middleton",
+            "state": "WI",
+            "date": "Dec 22 2025",
+            "time": "10:00 AM",
+            "emptyMiles": 8,
+            "address": "555 Brewery Rd",
+            "liveLoad": true
+        },
+        "delivery": {
+            "city": "Chicago",
+            "state": "IL",
+            "date": "Dec 22 2025",
+            "time": "02:00 PM",
+            "emptyMiles": 10,
+            "address": "999 Deep Dish Blvd",
+            "instructions": ["Driver assist"]
+        },
+        "equipmentType": "Flatbed",
+        "status": "assigned"
     }
 ];
