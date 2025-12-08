@@ -30,7 +30,9 @@ export const mockLoads: Load[] = [
       ]
     },
     "isReload": undefined,
-    "badge": "!"
+    "badge": "!",
+    "requirements": ["Customer Live Load", "Driver Assist Unload"],
+    "equipmentType": "Van"
   },
   {
     "id": "2",
@@ -61,7 +63,9 @@ export const mockLoads: Load[] = [
       ]
     },
     "isReload": undefined,
-    "badge": "!"
+    "badge": "!",
+    "requirements": ["Hazmat", "TWIC", "High Value"],
+    "equipmentType": "Reefer"
   },
   {
     "id": "3",
@@ -92,7 +96,9 @@ export const mockLoads: Load[] = [
       ]
     },
     "isReload": undefined,
-    "badge": undefined
+    "badge": undefined,
+    "requirements": ["Drop Relay", "Trailer Spot"],
+    "equipmentType": "Flatbed"
   },
   {
     "id": "4",

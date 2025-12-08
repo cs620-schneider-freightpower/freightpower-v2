@@ -29,4 +29,6 @@ export interface Load {
     longitude?: number;
   };
   isReload?: boolean;
+  requirements?: string[];
+  equipmentType?: 'Van' | 'Reefer' | 'Flatbed';
 }

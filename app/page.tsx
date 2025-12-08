@@ -148,6 +148,57 @@ export default function Optimized() {
         }
       }
 
+      // Filter by Min RPM
+      if (filters.minRPM) {
+        if (load.loadedRPM < parseFloat(filters.minRPM)) {
+          matches = false;
+        }
+      }
+
+      // Filter by Trip Distance
+      if (filters.minTripDistance) {
+        if (load.distance < parseFloat(filters.minTripDistance)) {
+          matches = false;
+        }
+      }
+      if (filters.maxTripDistance) {
+        if (load.distance > parseFloat(filters.maxTripDistance)) {
+          matches = false;
+        }
+      }
+
+      // Filter by Max Weight
+      if (filters.maxWeight) {
+        if (load.weight > parseFloat(filters.maxWeight)) {
+          matches = false;
+        }
+      }
+
+      // Filter by Max Deadhead (Empty Miles at Pickup)
+      if (filters.maxDeadhead) {
+        if (load.pickup.emptyMiles > parseFloat(filters.maxDeadhead)) {
+          matches = false;
+        }
+      }
+
+      // Filter by Equipment Type
+      if (filters.equipmentType) {
+        if (load.equipmentType !== filters.equipmentType) {
+          matches = false;
+        }
+      }
+
+      // Filter by Service Exclusions
+      // If a service is "excluded" (checked), we filter OUT loads that require it.
+      if (filters.excludedServices && filters.excludedServices.length > 0) {
+        const hasExcludedRequirement = filters.excludedServices.some(service =>
+          load.requirements?.includes(service)
+        );
+        if (hasExcludedRequirement) {
+          matches = false;
+        }
+      }
+
       return matches;
     });
 
