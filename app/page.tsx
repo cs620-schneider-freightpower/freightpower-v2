@@ -1,7 +1,8 @@
 "use client"
 import { useState, useMemo } from 'react';
 import { useRouter } from 'next/navigation';
-import { Search, Loader2, Heart, Clock } from 'lucide-react';
+import { Search, Loader2, Heart, Clock, MapPin, Sparkles, Filter, Navigation, Truck, ArrowRight } from 'lucide-react';
+import SectionHeader from './components/SectionHeader';
 import OptimizedLoadCard from './components/OptimizedLoadCard';
 import LoadDetailsModal from './components/LoadDetailsModal';
 import BottomNav from './components/search-results/BottomNav';
@@ -275,9 +276,9 @@ export default function Optimized() {
   };
 
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-gray-50/50">
       {/* Search Bar - Fixed at top */}
-      <div className="sticky top-0 z-20 bg-white px-4 pt-4 mb-2 border-b border-gray-100 flex items-start">
+      <div className="sticky top-0 z-20 bg-white px-4 pt-4 mb-6 border-b border-gray-100 flex items-start">
         <div
           className="flex-1 flex items-center bg-gray-100 border border-gray-200 rounded-xl px-4 py-3 cursor-pointer hover:bg-gray-50 transition-colors shadow-sm"
           onClick={() => setIsSearchModalOpen(true)}
@@ -335,17 +336,18 @@ export default function Optimized() {
       />
 
       {/* Main Content - with bottom padding for nav */}
-      <div className="">
+      <div className="pb-24">
 
         {/* Filtered Results Section */}
         {isFiltering && (
           <div className="mb-6">
-            <div className="relative overflow-hidden w-full bg-gradient-to-r from-orange-500 to-orange-400 px-4 py-3 mb-4">
-              <div className="relative z-10">
-                <h2 className="text-2xl text-white font-bold mb-0">Search Results</h2>
-                <p className="text-base text-white">{filteredLoads.length} loads found</p>
-              </div>
-            </div>
+            <SectionHeader
+              title="Search Results"
+              subtitle={`${filteredLoads.length} loads found`}
+              icon={Filter}
+              iconColor="text-orange-600"
+              iconBgColor="bg-orange-50"
+            />
 
             {filteredLoads.length === 0 ? (
               <div className="text-center py-8 px-4 text-gray-500">
@@ -372,12 +374,13 @@ export default function Optimized() {
         {/* AI Generated Loads Section */}
         {aiLoads.length > 0 && !isFiltering && (
           <div className="mb-6">
-            <div className="relative overflow-hidden w-full bg-gradient-to-r from-orange-500 to-orange-400 px-4 py-3 mb-4">
-              <div className="relative z-10">
-                <h2 className="text-2xl text-white font-bold mb-0">Madison, WI to {searchedDestination}</h2>
-                {/* <p className="text-base text-white">AI-generated loads • {aiLoads.length} available</p> */}
-              </div>
-            </div>
+            <SectionHeader
+              title={`Madison, WI to ${searchedDestination}`}
+              // subtitle="AI-generated loads available"
+              icon={Sparkles}
+              iconColor="text-orange-600"
+              iconBgColor="bg-orange-50"
+            />
 
             {/* Horizontal Scroll Container */}
             <div className="overflow-x-auto scrollbar-hide">
@@ -399,17 +402,13 @@ export default function Optimized() {
         {/* Loading State */}
         {isLoading && (
           <div className="mb-6">
-            <div className="relative overflow-hidden w-full bg-gradient-to-r from-orange-500 to-orange-400 px-4 py-3 mb-4">
-              <div className="relative z-10">
-                <h2 className="text-2xl text-white font-bold mb-0 flex items-center">
-                  Fetching loads
-                  <span className="ml-1 animate-pulse inline-block" style={{ letterSpacing: "2px" }}>
-                    ...
-                  </span>
-                </h2>
-                {/* <p className="text-base text-white">Please wait while AI creates your loads</p> */}
-              </div>
-            </div>
+            <SectionHeader
+              title="Fetching loads..."
+              subtitle="AI is finding the best matches"
+              icon={Loader2}
+              iconColor="text-orange-600 animate-spin"
+              iconBgColor="bg-orange-50"
+            />
 
             <div className="flex gap-3 px-4 pb-2 overflow-x-hidden">
               {[1, 2, 3, 4].map((i) => (
@@ -422,14 +421,13 @@ export default function Optimized() {
         {/* NAT/NAL Based Loads Section */}
         {natNalData && natNalLoads.length > 0 && !isFiltering && (
           <div className="mb-6">
-            <div className="relative overflow-hidden w-full bg-gradient-to-r from-purple-500 to-purple-400 px-4 py-3 mb-4">
-              <div className="relative z-10">
-                <h2 className="text-2xl text-white font-bold mb-0">Based on your NAT/NAL</h2>
-                <p className="text-base text-white">
-                  Available from {natNalData.city}, {natNalData.state} • {new Date(natNalData.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
-                </p>
-              </div>
-            </div>
+            <SectionHeader
+              title="Based on your NAT/NAL"
+              subtitle={`Available from ${natNalData.city}, ${natNalData.state} • ${new Date(natNalData.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}`}
+              icon={MapPin}
+              iconColor="text-purple-600"
+              iconBgColor="bg-purple-50"
+            />
 
             {/* Horizontal Scroll Container */}
             <div className="overflow-x-auto scrollbar-hide">
@@ -455,27 +453,16 @@ export default function Optimized() {
           onToggleWatch={toggleWatch}
         />
 
-        {/* Loads for you Banner */}
-        <div className="mb-4">
-          <div className="relative overflow-hidden w-full bg-orange-300/90 px-4 py-2">
-            <div className="relative z-10">
-              <h2 className="text-2xl text-white font-bold mb-0">Loads near Madison, WI</h2>
-              <p className="text-base text-white ">Based on your current location</p>
-            </div>
-          </div>
-        </div>
-
         {/* Loads near you Section */}
         <div className="mb-6">
-          {/* <div className="flex items-center justify-between px-4 mb-3">
-            <h3 className="text-xl font-bold text-black">Loads near you</h3>
-            <button
-              onClick={() => router.push('/all-loads')}
-              className="text-sm font-medium text-gray-600 bg-gray-100 px-4 py-2 rounded-full hover:bg-gray-200 transition-colors"
-            >
-              See all
-            </button>
-          </div> */}
+          <SectionHeader
+            title="Loads near Madison, WI"
+            subtitle="Based on your current location"
+            icon={Navigation}
+            iconColor="text-blue-600"
+            iconBgColor="bg-blue-50"
+            onAction={() => router.push('/all-loads')}
+          />
 
           {/* Horizontal Scroll Container */}
           <div className="overflow-x-auto scrollbar-hide">
@@ -496,12 +483,13 @@ export default function Optimized() {
         {/* Chicago Loads Section */}
         {chicagoLoads.length > 0 && (
           <div className="mb-6">
-            <div className="relative overflow-hidden w-full bg-gradient-to-r from-blue-600 to-blue-500 px-4 py-3 mb-4">
-              <div className="relative z-10">
-                <h2 className="text-2xl text-white font-bold mb-0">Loads to Chicago, IL</h2>
-                <p className="text-base text-white">High demand lane • {chicagoLoads.length} loads available</p>
-              </div>
-            </div>
+            <SectionHeader
+              title="Loads to Chicago, IL"
+              subtitle={`High demand lane • ${chicagoLoads.length} loads available`}
+              icon={Truck}
+              iconColor="text-blue-600"
+              iconBgColor="bg-blue-50"
+            />
 
             {/* Horizontal Scroll Container */}
             <div className="overflow-x-auto scrollbar-hide">
@@ -523,22 +511,14 @@ export default function Optimized() {
         {/* California to Texas Route Section */}
         {californiaToTexas.length > 0 && (
           <div className="mb-6">
-            <div className="flex items-center justify-between px-4 mb-3">
-              <h3
-                className="text-xl font-bold text-black truncate"
-                style={{ maxWidth: '220px', minWidth: '180px', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}
-                title={`${californiaToTexas[0].pickup.city}, ${californiaToTexas[0].pickup.state} to ${californiaToTexas[0].delivery.city}, ${californiaToTexas[0].delivery.state}`}
-              >
-                {californiaToTexas[0].pickup.city}, {californiaToTexas[0].pickup.state} to{' '}
-                {californiaToTexas[0].delivery.city}, {californiaToTexas[0].delivery.state}
-              </h3>
-              <button
-                onClick={() => router.push('/all-loads')}
-                className="text-base font-medium text-gray-600 bg-gray-100 px-4 py-2 rounded-full hover:bg-gray-200 transition-colors"
-              >
-                See all
-              </button>
-            </div>
+            <SectionHeader
+              title={`${californiaToTexas[0].pickup.city}, ${californiaToTexas[0].pickup.state} to ${californiaToTexas[0].delivery.city}, ${californiaToTexas[0].delivery.state}`}
+              subtitle="Popular lane for your equipment"
+              icon={ArrowRight}
+              iconColor="text-gray-600"
+              iconBgColor="bg-gray-100"
+              onAction={() => router.push('/all-loads')}
+            />
 
             {/* Horizontal Scroll Container */}
             <div className="overflow-x-auto scrollbar-hide">
