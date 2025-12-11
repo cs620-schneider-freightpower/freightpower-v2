@@ -29,32 +29,57 @@ export default function BookingPage({ params }: BookingPageProps) {
             const { id } = await params;
             setLoadId(id);
 
-            const loadSource = identifyLoadSource(id);
-            setSource(loadSource);
+            // First, try to find the load in local data sources
+            const localLoad = findLoadById(id);
 
-            if (loadSource === 'mock' || loadSource === 'madison') {
-                // Local data - fetch from memory
-                const foundLoad = findLoadById(id);
-                if (foundLoad) {
-                    setLoad(foundLoad);
-                    setState('ready');
-                } else {
-                    setError(`Load with ID "${id}" not found`);
-                    setState('error');
-                }
+            if (localLoad) {
+                // Found in local data
+                const loadSource = identifyLoadSource(id);
+                setSource(loadSource);
+                setLoad(localLoad);
+                setState('ready');
             } else {
-                // Backend load - fetch from API
+                // Not found locally - try backend API
+                setSource('backend');
                 try {
-                    const response = await fetch(`http://localhost:8000/load/${id}`);
+                    // Try to fetch from backend recommendation endpoint
+                    // Using a known valid user ID from the backend README
+                    const response = await fetch(`http://localhost:8000/recommend/1450181150?current_lat=43.0731&current_lon=-89.4012&limit=100`);
                     if (!response.ok) {
-                        throw new Error('Load not found');
+                        throw new Error('Failed to fetch from backend');
                     }
                     const data = await response.json();
-                    setLoad(data);
-                    setState('ready');
+
+                    // Find the load in recommendations (backend uses 'load_id' field)
+                    const foundLoad = data.recommendations?.find((rec: any) =>
+                        String(rec.load_id) === id
+                    );
+
+                    if (foundLoad) {
+                        // Map backend format to frontend Load type
+                        const mappedLoad = {
+                            ...foundLoad,
+                            id: foundLoad.load_id || foundLoad.id,  // Backend uses load_id
+                            loadedRPM: foundLoad.loadedRPM || foundLoad.revenue_per_mile || 0,
+                            estTotalRPM: foundLoad.estTotalRPM || foundLoad.revenue_per_mile || 0,
+                            pickup: {
+                                ...foundLoad.pickup,
+                                emptyMiles: foundLoad.pickup?.emptyMiles || 0,
+                            },
+                            delivery: {
+                                ...foundLoad.delivery,
+                                emptyMiles: foundLoad.delivery?.emptyMiles || 0,
+                                instructions: foundLoad.delivery?.instructions || [],
+                            },
+                        };
+                        setLoad(mappedLoad);
+                        setState('ready');
+                    } else {
+                        setError(`Load with ID "${id}" not found`);
+                        setState('error');
+                    }
                 } catch {
-                    // For demo purposes, show a placeholder for backend loads
-                    setError(`Backend load "${id}" - API endpoint not implemented yet`);
+                    setError(`Load with ID "${id}" not found`);
                     setState('error');
                 }
             }
