@@ -3,7 +3,12 @@
 import { useRouter, usePathname } from 'next/navigation';
 import { Home, Search, FileText, MapPin, MoreHorizontal } from 'lucide-react';
 
-export default function BottomNav() {
+interface BottomNavProps {
+    hidden?: boolean;
+}
+
+export default function BottomNav({ hidden = false }: BottomNavProps) {
+    if (hidden) return null;
     const router = useRouter();
     const pathname = usePathname();
 

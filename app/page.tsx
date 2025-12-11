@@ -570,7 +570,7 @@ export default function Optimized() {
       `}</style>
 
       {/* Bottom Navigation */}
-      <BottomNav />
+      <BottomNav hidden={isSearchModalOpen} />
 
       {/* Load Details Modal */}
       <LoadDetailsModal
