@@ -12,7 +12,7 @@ interface SearchHistoryModalProps {
 }
 
 export default function SearchHistoryModal({ isOpen, onClose, onApplySearch }: SearchHistoryModalProps) {
-    const { searchHistory, clearHistory } = useSearchHistory();
+    const { searchHistory, removeFromHistory, clearHistory } = useSearchHistory();
     if (!isOpen) return null;
 
     const formatTime = (timestamp: number) => {
@@ -87,33 +87,48 @@ export default function SearchHistoryModal({ isOpen, onClose, onApplySearch }: S
                         </div>
                     ) : (
                         searchHistory.map((item) => (
-                            <button
+                            <div
                                 key={item.id}
-                                onClick={() => {
-                                    onApplySearch(item.filters);
-                                    onClose();
-                                }}
-                                className="w-full text-left bg-white p-4 rounded-xl border border-gray-100 hover:border-blue-200 hover:shadow-md transition-all group group-hover:bg-blue-50/10 flex items-center gap-4"
+                                className="w-full bg-white p-4 rounded-xl border border-gray-100 hover:border-blue-200 hover:shadow-md transition-all group flex items-center gap-3"
                             >
-                                <div className="flex-1 min-w-0">
-                                    <div className="flex items-center gap-2 mb-1">
-                                        <span className="text-sm font-semibold text-gray-900 truncate">
-                                            {getSummary(item.filters)}
-                                        </span>
-                                        <span className="text-[10px] text-gray-400 font-medium px-2 py-0.5 bg-gray-50 rounded-full">
-                                            {formatTime(item.timestamp)}
-                                        </span>
+                                <button
+                                    onClick={() => {
+                                        onApplySearch(item.filters);
+                                        onClose();
+                                    }}
+                                    className="flex-1 min-w-0 text-left flex items-center gap-4"
+                                >
+                                    <div className="flex-1 min-w-0">
+                                        <div className="flex items-center gap-2 mb-1">
+                                            <span className="text-sm font-semibold text-gray-900 truncate">
+                                                {getSummary(item.filters)}
+                                            </span>
+                                            <span className="text-[10px] text-gray-400 font-medium px-2 py-0.5 bg-gray-50 rounded-full">
+                                                {formatTime(item.timestamp)}
+                                            </span>
+                                        </div>
+                                        <div className="text-xs text-gray-500 truncate flex items-center gap-1">
+                                            {item.filters.radius > 0 && <span className="bg-gray-100 px-1.5 py-0.5 rounded text-gray-600">±{item.filters.radius}mi</span>}
+                                            {item.filters.delivery && <span>to {item.filters.delivery}</span>}
+                                        </div>
                                     </div>
-                                    <div className="text-xs text-gray-500 truncate flex items-center gap-1">
-                                        {item.filters.radius > 0 && <span className="bg-gray-100 px-1.5 py-0.5 rounded text-gray-600">±{item.filters.radius}mi</span>}
-                                        {item.filters.delivery && <span>to {item.filters.delivery}</span>}
-                                    </div>
-                                </div>
 
-                                <div className="text-blue-500 opacity-0 group-hover:opacity-100 transition-opacity">
-                                    <ChevronRight className="w-5 h-5" />
-                                </div>
-                            </button>
+                                    <div className="text-blue-500 opacity-0 group-hover:opacity-100 transition-opacity">
+                                        <ChevronRight className="w-5 h-5" />
+                                    </div>
+                                </button>
+
+                                <button
+                                    onClick={(e) => {
+                                        e.stopPropagation();
+                                        removeFromHistory(item.id);
+                                    }}
+                                    className="p-2 text-gray-400 hover:text-red-500 rounded-full hover:bg-red-50 transition-colors"
+                                    title="Delete search"
+                                >
+                                    <Trash2 className="w-4 h-4" />
+                                </button>
+                            </div>
                         ))
                     )}
                 </div>

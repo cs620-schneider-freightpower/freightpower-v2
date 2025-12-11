@@ -12,6 +12,7 @@ export interface HistorySearch {
 interface SearchHistoryContextType {
     searchHistory: HistorySearch[];
     addToHistory: (filters: SearchFilters) => void;
+    removeFromHistory: (id: string) => void;
     clearHistory: () => void;
 }
 
@@ -109,12 +110,16 @@ export function SearchHistoryProvider({ children }: { children: ReactNode }) {
         });
     };
 
+    const removeFromHistory = (id: string) => {
+        setSearchHistory(prev => prev.filter(item => item.id !== id));
+    };
+
     const clearHistory = () => {
         setSearchHistory([]);
     };
 
     return (
-        <SearchHistoryContext.Provider value={{ searchHistory, addToHistory, clearHistory }}>
+        <SearchHistoryContext.Provider value={{ searchHistory, addToHistory, removeFromHistory, clearHistory }}>
             {children}
         </SearchHistoryContext.Provider>
     );
