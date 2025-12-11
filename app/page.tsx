@@ -276,7 +276,7 @@ export default function Optimized() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50/50">
+    <div className="min-h-screen bg-white">
       {/* Search Bar - Fixed at top */}
       <div className="sticky top-0 z-20 bg-white px-4 pt-4 mb-6 border-b border-gray-100 flex items-start">
         <div
