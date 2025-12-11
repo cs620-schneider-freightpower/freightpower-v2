@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from 'react';
+import Image from 'next/image';
 import { Load } from '../types/load';
 import OptimizedLoadCard from './OptimizedLoadCard';
 import { useUser } from '../context/UserContext';
@@ -75,6 +76,9 @@ export default function RecommendedLoadsRow({ onLoadClick, watchedLoadIds, onTog
                         <h2 className="text-2xl text-white font-bold mb-0">Recommended for you</h2>
                         <p className="text-base text-white opacity-90">Loading your personalized loads...</p>
                     </div>
+                    {/* <div className="absolute top-3 right-4 z-10">
+                        <Image src="/schneider.svg" alt="Schneider" width={100} height={48} />
+                    </div> */}
                 </div>
                 <div className="flex gap-3 px-4 pb-2 overflow-x-hidden">
                     {[1, 2, 3].map((i) => (
@@ -96,6 +100,9 @@ export default function RecommendedLoadsRow({ onLoadClick, watchedLoadIds, onTog
                         Personalized matches based on your profile
                     </p>
                 </div>
+                {/* <div className="absolute top-3 right-4 z-10">
+                    <Image src="/schneider.svg" alt="Schneider" width={140} height={48} />
+                </div> */}
             </div>
 
             {/* Horizontal Scroll Container */}

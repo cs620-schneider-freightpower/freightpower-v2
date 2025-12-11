@@ -1,0 +1,26 @@
+<svg width="600" height="200" viewBox="0 0 600 200" xmlns="http://www.w3.org/2000/svg">
+  <g transform="translate(40, 110)">
+    <text 
+      x="0" 
+      y="0" 
+      font-family="Arial, sans-serif" 
+      font-weight="900" 
+      font-style="italic" 
+      font-size="85" 
+      fill="white" 
+      style="letter-spacing: -2px;">
+      SCHNEIDER
+    </text>
+    
+    <path 
+      d="M -10 20 
+         L 235 20 
+         L 260 0 
+         L 260 30 
+         L 540 30 
+         L 540 50 
+         L -10 50 
+         Z" 
+      fill="white" />
+  </g>
+</svg>
