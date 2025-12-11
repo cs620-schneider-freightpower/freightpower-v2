@@ -5,18 +5,26 @@ import MyLoadCard from '../components/MyLoadCard';
 import LoadDetailsModal from '../components/LoadDetailsModal';
 import BottomNav from '../components/search-results/BottomNav';
 import { Search } from 'lucide-react';
+import { useBookedLoads } from '../context/BookedLoadsContext';
+import { Load } from '../types/load';
 
 type TabType = 'assigned' | 'in-transit' | 'delivered';
 
 export default function MyLoadsPage() {
     const [activeTab, setActiveTab] = useState<TabType>('assigned');
     const [selectedLoadId, setSelectedLoadId] = useState<string | null>(null);
+    const { bookedLoads } = useBookedLoads();
 
     // Filter loads based on status
     // Note: in a real app, this would be an API call
-    const assignedLoads = mockLoads.filter(l => l.status === 'assigned');
+    const mockAssignedLoads = mockLoads.filter(l => l.status === 'assigned');
     const inTransitLoads = mockLoads.filter(l => l.status === 'in-transit');
     const deliveredLoads = mockLoads.filter(l => l.status === 'delivered');
+
+    // Prepend booked loads to assigned list (filter out any duplicates)
+    const bookedIds = new Set(bookedLoads.map(l => l.id));
+    const filteredMockAssigned = mockAssignedLoads.filter(l => !bookedIds.has(l.id));
+    const assignedLoads: Load[] = [...bookedLoads, ...filteredMockAssigned];
 
     const getLoadsForTab = () => {
         switch (activeTab) {
@@ -28,7 +36,9 @@ export default function MyLoadsPage() {
     };
 
     const loads = getLoadsForTab();
-    const selectedLoad = mockLoads.find(l => l.id === selectedLoadId) || null;
+    // Look in all sources for selected load
+    const allLoads = [...bookedLoads, ...mockLoads];
+    const selectedLoad = allLoads.find(l => l.id === selectedLoadId) || null;
 
     return (
         <div className="min-h-screen bg-gray-50 pb-20 md:pb-6">

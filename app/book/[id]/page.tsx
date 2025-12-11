@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import { ArrowLeft, Truck, MapPin, DollarSign, Weight, CheckCircle, AlertCircle, Loader2 } from 'lucide-react';
 import { Load } from '../../types/load';
 import { identifyLoadSource, findLoadById, LoadSource } from '../../utils/loadUtils';
+import { useBookedLoads } from '../../context/BookedLoadsContext';
 
 type BookingState = 'loading' | 'ready' | 'confirming' | 'success' | 'error';
 
@@ -14,6 +15,7 @@ interface BookingPageProps {
 
 export default function BookingPage({ params }: BookingPageProps) {
     const router = useRouter();
+    const { bookLoad } = useBookedLoads();
     const [loadId, setLoadId] = useState<string>('');
     const [load, setLoad] = useState<Load | null>(null);
     const [source, setSource] = useState<LoadSource | null>(null);
@@ -67,7 +69,12 @@ export default function BookingPage({ params }: BookingPageProps) {
             if (source === 'mock' || source === 'madison') {
                 // Mock/Madison: Simulate instant success with delay
                 await new Promise(resolve => setTimeout(resolve, 1500));
-                setBookingId(`BK-${loadId}-${Date.now().toString(36).toUpperCase()}`);
+                const generatedBookingId = `BK-${loadId}-${Date.now().toString(36).toUpperCase()}`;
+                setBookingId(generatedBookingId);
+                // Add to booked loads context
+                if (load) {
+                    bookLoad(load, generatedBookingId);
+                }
                 setState('success');
             } else {
                 // Backend: Call the booking API
@@ -84,6 +91,10 @@ export default function BookingPage({ params }: BookingPageProps) {
                 }
 
                 setBookingId(data.bookingId);
+                // Add to booked loads context
+                if (load) {
+                    bookLoad(load, data.bookingId);
+                }
                 setState('success');
             }
         } catch (err) {
@@ -178,10 +189,10 @@ export default function BookingPage({ params }: BookingPageProps) {
                 {/* Data Source Badge */}
                 <div className="flex items-center gap-2">
                     <span className={`text-xs font-bold uppercase tracking-wider px-3 py-1 rounded-full ${source === 'backend'
-                            ? 'bg-blue-100 text-blue-700'
-                            : source === 'madison'
-                                ? 'bg-purple-100 text-purple-700'
-                                : 'bg-gray-100 text-gray-700'
+                        ? 'bg-blue-100 text-blue-700'
+                        : source === 'madison'
+                            ? 'bg-purple-100 text-purple-700'
+                            : 'bg-gray-100 text-gray-700'
                         }`}>
                         {source === 'backend' ? 'Live Load' : source === 'madison' ? 'Madison Area' : 'Available Load'}
                     </span>

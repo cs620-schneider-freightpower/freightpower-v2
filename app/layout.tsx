@@ -6,6 +6,7 @@ import { WatchedLoadsProvider } from './context/WatchedLoadsContext';
 import { SavedSearchesProvider } from './context/SavedSearchesContext';
 import { SearchHistoryProvider } from './context/SearchHistoryContext';
 import { UserProvider } from './context/UserContext';
+import { BookedLoadsProvider } from './context/BookedLoadsContext';
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -37,7 +38,9 @@ export default function RootLayout({
             <WatchedLoadsProvider>
               <SavedSearchesProvider>
                 <SearchHistoryProvider>
-                  {children}
+                  <BookedLoadsProvider>
+                    {children}
+                  </BookedLoadsProvider>
                 </SearchHistoryProvider>
               </SavedSearchesProvider>
             </WatchedLoadsProvider>
